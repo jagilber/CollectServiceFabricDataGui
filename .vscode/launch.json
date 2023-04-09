@@ -1,0 +1,110 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    //https://learn.microsoft.com/en-us/aspnet/core/blazor/debug?view=aspnetcore-7.0&tabs=visual-studio-code
+    //dotnet dev-certs https --trust
+    //https://github.com/dotnet/aspnetcore/issues/31105
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Core Launch (Blazor Standalone) step 1 (works for debugging client and server)",
+            "type": "coreclr",
+            "request": "launch",
+            "justMyCode": false,
+            "program": "${workspaceFolder}/src/CollectSFDataGui/Server/bin/Debug/net6.0/CollectSFDataGui.Server.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/CollectSFDataGui/Server",
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}"
+            }
+        },
+        {
+            "trace": true,
+            "name": ".NET Core Debug Blazor Web Assembly in Edge step 2 (works for debugging client and server)",
+            "type": "msedge",
+            "request": "launch",
+            "timeout": 30000,
+            "url": "http://localhost:5000/configuration",
+            "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
+            "webRoot": "${workspaceFolder}/src/CollectSFDataGui"
+        },
+        {
+            "name": ".NET Core 31 Launch with Args (console)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/src/bin/Debug/netcoreapp3.1/CollectSFData.dll",
+            "args": [
+                //"${input:args}"
+                "-type",
+                "trace",
+                "-debug",
+                "3"
+            ],
+            "cwd": "${workspaceFolder}/src/bin/Debug/netcoreapp3.1",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+        },
+        {
+            "name": ".NET Core 7 Launch with Args (console)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/src/bin/Debug/net6.0/CollectSFData.dll",
+            "args": [
+                //"${input:args}"
+                //"-config",
+                //".\\local.json"
+            ],
+            "cwd": "${workspaceFolder}/src/bin/Debug/net6.0",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+        },
+        {
+            "name": "NET 7 Launch (console)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/src/bin/Debug/net6.0/CollectSFData.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/bin/Debug/net6.0",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": ".NET Core 31 Launch (console)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/src/bin/Debug/netcoreapp3.1/CollectSFData.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/bin/Debug/netcoreapp3.1",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
+        },
+        {
+            "name": "PowerShell Launch Current File",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${file}",
+            "cwd": "${file}"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "args",
+            "type": "promptString",
+            "description": "enter arguments"
+        }
+    ]
+}
