@@ -5,13 +5,15 @@
 @using CollectSFData
 @using BlazorApp.Helpers
 @using Microsoft.Extensions.Logging
+@using System.IO
 @using System.Text.Json
+@using System.Text.Json.Serialization
 @using System.Net
 @inject DialogService DialogService
 @inject HttpClient Http
 @inject NavigationManager navigationManager
-@inject ILogger<Configuration> logger;
-
+@inject ILogger<Configuration> logger
+@inject IJSRuntime JS
 
 <style>
     form .row {
@@ -490,6 +492,12 @@ else
     private ConfigurationProperties tempconfig { get; set; }
     private string tableName;
 
+    // file upload
+    EventConsole console;
+    //RadzenUpload upload;
+    //int progress;
+    //string info;
+
     protected override async Task OnInitializedAsync()
     {
 #if DEBUG
@@ -501,7 +509,90 @@ else
         GatherTypes = Enum.GetNames(typeof(CollectSFData.DataFile.FileTypesEnum)).ToList();
         await GetCurrentConfig();
     }
- 
+
+    void Cancel()
+    {
+        Http.CancelPendingRequests();
+    }
+
+    async Task GetCurrentConfig()
+    {
+        config = await Http.GetFromJsonAsync<ConfigurationProperties>("api/configurationJson", JsonHelpers.GetJsonSerializerOptions());
+        tableName = config.KustoTable;
+    }
+
+    void OnKeyPress(string value) {
+        //Enter
+        var keyboardInput = value;
+    }
+
+    void OnSetFileSavePath(string value) {
+
+        config.SaveConfiguration = value;
+    }
+
+    void OnUploadComplete(UploadCompleteEventArgs args)
+    {
+        string jsonString = args.RawResponse;
+
+        console.Log($"Server response: {jsonString}");
+        UpdateConfig(jsonString);
+    }
+
+    public MemoryStream Serialize()
+    {
+        //https://stackoverflow.com/questions/8157636/can-json-net-serialize-deserialize-to-from-a-stream
+        var fileStream = new MemoryStream();
+        using (StreamWriter writer = new StreamWriter(fileStream))
+        writer.Write(JsonSerializer.Serialize(config));
+
+        return new MemoryStream(fileStream.ToArray());
+    }
+
+    // old working
+    async Task ShowSaveDialogWorking()
+    {
+        var result = await DialogService.OpenAsync("Save", ds =>
+        @<div>
+            <p class="mb-4">Save configuration</p>
+            <div class="row">
+                <div class="col">
+                    <RadzenButton Text="Ok" Click="() => ds.Close(true)" class="me-1" Style="width: 80px;" />
+                    <RadzenButton Text="Cancel" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" class="me-1" />
+                    <RadzenText>File:</RadzenText>
+                    <RadzenTextBox @onkeypress="@(args => OnKeyPress(args.Key.ToString()))" Placeholder="Enter file name and path for saving .json" Change="@(args => OnSetFileSavePath(args))" class="w-100" />
+                </div>
+            </div>
+        </div>);
+
+        if(result) {
+            try {
+                UpdateConfig();
+
+                if (!string.IsNullOrEmpty(config.SaveConfiguration) && !Directory.Exists(Path.GetDirectoryName(config.SaveConfiguration))) {
+                    Directory.CreateDirectory(Path.GetDirectoryName(config.SaveConfiguration));
+                }
+
+                using var fileMemoryStream = Serialize();
+                using FileStream fileStream = new FileStream(config.SaveConfiguration, FileMode.Create);
+                fileStream.Write(fileMemoryStream.ToArray());
+            }
+            catch (Exception e) {
+                logger.LogError("exception saving file.");
+            }
+        }
+    }
+
+    async Task ShowSaveDialog()
+    {
+        //https://learn.microsoft.com/en-us/aspnet/core/blazor/file-downloads?view=aspnetcore-7.0
+        var fileStream = Serialize();
+        var fileName = "collectsfdata.options.json";
+
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
+        await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+    }
+
     void Submit(ConfigurationProperties arg)
     {
         UpdateConfig();
@@ -531,60 +622,6 @@ else
         {
             console.Log($"ERROR:{response.StatusCode}");
             await GetCurrentConfig();
-        }
-    }
-
-    void Cancel()
-    {
-        Http.CancelPendingRequests();
-    }
-
-
-
-    async Task GetCurrentConfig()
-    {
-
-        config = await Http.GetFromJsonAsync<ConfigurationProperties>("api/configurationJson", JsonHelpers.GetJsonSerializerOptions());
-        tableName = config.KustoTable;
-
-    }
-
-
-    // file upload
-    EventConsole console;
-    //RadzenUpload upload;
-    //int progress;
-    //string info;
-
-    void OnUploadComplete(UploadCompleteEventArgs args)
-    {
-        string jsonString = args.RawResponse;
-
-        console.Log($"Server response: {jsonString}");
-        UpdateConfig(jsonString);
-    }
-
-    void OnSetFileSavePath(string value) {
-        config.SaveConfiguration = value;
-    }
-
-    async Task ShowSaveDialog()
-    {
-        var result = await DialogService.OpenAsync("Save", ds =>
-        @<div>
-            <p class="mb-4">Save configuration</p>
-            <div class="row">
-                <div class="col">
-                    <RadzenButton Text="Ok" Click="() => ds.Close(true)" class="me-1" Style="width: 80px;" />
-                    <RadzenButton Text="Cancel" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" class="me-1" />
-                    <RadzenText>File:</RadzenText>
-                    <RadzenTextBox Placeholder="Enter file name and path for saving .json" Change="@(args => OnSetFileSavePath(args))" class="w-100" />
-                </div>
-            </div>
-        </div>);
-
-        if(result) {
-            UpdateConfig();
         }
     }
 }
