@@ -1,4 +1,4 @@
-﻿@page "/configuration"
+@page "/configuration"
 @using CollectSFDataGui.Shared
 @using CollectSFData.Azure
 @using CollectSFData.Common
@@ -58,13 +58,21 @@ else
                         </div>
                     </div>
                 </RadzenFieldset>
-                <RadzenFieldset Text="Kusto Table Information">
+                <RadzenFieldset Text="Table Information">
                     <div class="row">
                         <div class="col-md-4 align-items-center d-flex">
                             <RadzenLabel Text="Table Name" />
                         </div>
                         <div class="col-md-8">
                             <RadzenTextBox @bind-Value=@tableName style="width: 100%;" Name="TableName" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 align-items-center d-flex">
+                            <RadzenLabel Text="Cluster Resource Uri" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox @bind-Value=@config.ResourceUri Placeholder="enter cluster resource uri (for support use only)" style="width: 100%;" />
                         </div>
                     </div>
                     <RadzenTabs SelectedIndex="0">
@@ -232,13 +240,13 @@ else
                         <RadzenUpload
                             ChooseText="Upload" 
                             Url="upload/single" 
-                            Style="margin-left: 20px;" 
+                            Style="margin-left: 20px;"
                             Complete=@(args => OnUploadComplete(args))
                         />
                     </div>
                     <div class="row justify-content-left">
                         @* <RadzenButton ButtonType="ButtonType.Submit" Icon="save" style="margin-left: 20px;" Text="Save" /> *@
-                         <RadzenButton Text="Save" ButtonStyle="ButtonStyle.Secondary" style="margin-left: 20px;" Click=@ShowSaveDialog />
+                         <RadzenButton Text="Save" ButtonStyle="ButtonStyle.Secondary" style="margin-left: 20px;" Click=@SaveOptionsFile />
                     </div>
                     <div class="row justify-content-left">
                         <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="margin-left: 20px;" Text="Cancel"
@@ -370,14 +378,6 @@ else
                                         <RadzenTextBox @bind-Value=@config.AzureResourceGroupLocation Placeholder="enter azure resource group (log analytics only)" style="width: 100%;" />
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="align-items-center d-flex col-md-3">
-                                        <RadzenLabel Text="Azure Resource Uri" />
-                                    </div>
-                                    <div class="col-md-9">
-                                        <RadzenTextBox @bind-Value=@config.ResourceUri Placeholder="enter azure resource uri (for support use only)" style="width: 100%;" />
-                                    </div>
-                                </div>
                             </RadzenTabsItem>
                         </Tabs>
                     </RadzenTabs>
@@ -475,15 +475,21 @@ else
                             <RadzenNumeric @bind-Value=@config.Threads TValue="int" Min="1" Max="64" />
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-4 align-items-center d-flex">
+                            <RadzenLabel Text="Options File" />
+                        </div>
+                        <div class="col-md-8">
+                            <RadzenTextBox @bind-Value=@config.SaveConfiguration style="width: 100%;" Placeholder="collectsfdata.options.json" />
+                        </div>
+                    </div>
+
                 </RadzenFieldset>
             </div>
         </div>
     </RadzenTemplateForm>
-    <div class="container">
-        <div class="console-content">
-        <EventConsole @ref=@console />
-        </div>
-    </div>
+    
+    <EventConsole @ref=@console />
 }
 
 @code {
@@ -521,9 +527,12 @@ else
         tableName = config.KustoTable;
     }
 
-    void OnKeyPress(string value) {
+    void OnKeyPress(string value, Radzen.DialogService sender) {
         //Enter
         var keyboardInput = value;
+        if(keyboardInput == "Enter") {
+          sender.Close(true);
+        }
     }
 
     void OnSetFileSavePath(string value) {
@@ -550,7 +559,7 @@ else
     }
 
     // old working
-    async Task ShowSaveDialogWorking()
+    async Task ShowSaveDialog()
     {
         var result = await DialogService.OpenAsync("Save", ds =>
         @<div>
@@ -560,17 +569,24 @@ else
                     <RadzenButton Text="Ok" Click="() => ds.Close(true)" class="me-1" Style="width: 80px;" />
                     <RadzenButton Text="Cancel" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" class="me-1" />
                     <RadzenText>File:</RadzenText>
-                    <RadzenTextBox @onkeypress="@(args => OnKeyPress(args.Key.ToString()))" Placeholder="Enter file name and path for saving .json" Change="@(args => OnSetFileSavePath(args))" class="w-100" />
+                    <RadzenTextBox @onkeypress=@(args => OnKeyPress(args.Key.ToString(),ds)) Placeholder=@(config.SaveConfiguration) Change=@(args => OnSetFileSavePath(args)) class="w-100" />
                 </div>
             </div>
         </div>);
 
         if(result) {
             try {
+                // normalize path for JS and all OS
+                config.SaveConfiguration = config.SaveConfiguration.Replace("\\","/").TrimStart('/');
                 UpdateConfig();
+                string directory = Directory.GetParent(config.SaveConfiguration).FullName;
+                logger.LogInformation($"checking filepath. {config.SaveConfiguration}");
+                logger.LogInformation($"checking filepath directory. {directory}");
 
-                if (!string.IsNullOrEmpty(config.SaveConfiguration) && !Directory.Exists(Path.GetDirectoryName(config.SaveConfiguration))) {
-                    Directory.CreateDirectory(Path.GetDirectoryName(config.SaveConfiguration));
+                if (!string.IsNullOrEmpty(config.SaveConfiguration) 
+                    && !string.IsNullOrEmpty(directory)
+                    && !Directory.Exists(directory)) {
+                    Directory.CreateDirectory(directory);
                 }
 
                 using var fileMemoryStream = Serialize();
@@ -578,16 +594,16 @@ else
                 fileStream.Write(fileMemoryStream.ToArray());
             }
             catch (Exception e) {
-                logger.LogError("exception saving file.");
+                logger.LogError($"exception saving file. {e}");
             }
         }
     }
 
-    async Task ShowSaveDialog()
+    async Task SaveOptionsFile()
     {
         //https://learn.microsoft.com/en-us/aspnet/core/blazor/file-downloads?view=aspnetcore-7.0
         var fileStream = Serialize();
-        var fileName = "collectsfdata.options.json";
+        var fileName = config.SaveConfiguration;
 
         using var streamRef = new DotNetStreamReference(stream: fileStream);
         await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
