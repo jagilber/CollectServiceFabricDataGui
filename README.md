@@ -1,6 +1,6 @@
 ![](./src/FabricSupport.ico)
 
-# CollectSFData
+# CollectSFDataGui
 
 >[Current download](https://github.com/microsoft/CollectServiceFabricData/releases/latest)  
 >[Privacy](#privacy)  
@@ -16,17 +16,7 @@
 
 ## Overview
 
-CollectSFData is a .net command-line utility to assist with the download of Azure Service Fabric diagnostic data from the configured Azure storage account.
-Optionally, CollectSFData can be configured to ingest downloaded data into a configured [Azure Data Explorer](https://docs.microsoft.com/en-us/azure/data-explorer/) (Kusto) database or Log Analytics (OMS) for analysis. The diagnostic data is primarily used by Microsoft support and engineering teams for troubleshooting issues with Service Fabric itself. This low level ETL data is large and should only be collected after other troubleshooting steps have been performed.
-See [docs](/docs) and [configurationFiles](/configurationFiles) for additional information.
-
-Service Fabric diagnostic data that can be enumerated / downloaded from configured storage account:
-
-- service fabric detailed .dtr logs in .zip. (fabriclogs-*)
-- service fabric counter .blg files. (fabriccounters-*)
-- service fabric fabric exceptions .dmp files. (fabriccrashdump-*)
-- service fabric events stored in Azure blob tables.
-- service fabric setup .trace files.
+CollectSFDataGui is a .net blazor client/server gui interface utility to assist with configuration of [CollectServiceFabricData](https://github.com/microsoft/CollectServiceFabricData)
 
 ## Privacy
 
@@ -34,50 +24,29 @@ Microsoft Privacy Statement: https://privacy.microsoft.com/en-US/privacystatemen
 
 ## Requirements
 
-Service Fabric diagnostic data can be large depending on utilization and size of cluster. CollectSFData is a multi-threaded utility designed to process data as quickly as possible.
-Depending on configuration, resource usage of cpu, memory, network, disk, and disk space can be high. Below are general resource guidelines for execution of utility.
+- .net 6.0+
 
-- Windows 10 / Windows 2016+ image x64
-- .net 4.7.2+
-- 16+ GB RAM
-- 4+ cpu
-- 100 GB free drive space preferably on ssd for fabriclogs if caching locally to disk (UseMemoryStream = false)
-
-Currently fabriclogs, fabriccounters, setup, and table (event) data all have to be formatted after download before ingestion. This requires additional cpu, memory, and disk resources. The following is needed:
-
-### Kusto option requirements
-
-Configuration for data ingestion into Kusto has these requirements:
-
-- Existing online Kusto database.
-- Authentication to Kusto database. Authentication can be interactive or non interactive.
-
-### Log Analytics option requirements
-
-Configuration for date ingestion into Log Analytics as a custom log has these requirements:
-
-- Existing Log Analytics workspace and workspace ID guid.
-- Log Analytics primary / secondary base64 key for authentication.
+############### to do ##################
 
 ## Setup
 
-CollectSFData is both a console utility and dll packaged in both a nuget package and github release zip.
-Use the below steps to setup environment for use with CollectSFData.
+CollectSFDataGui is both a console utility and dll packaged in both a nuget package and github release zip.
+Use the below steps to setup environment for use with CollectSFDataGui.
 
 1. Ensure machine executing utility has comparable [requirements](#requirements)
 1. Download latest release from nuget or github release:  
     a. nuget  
-      1. nuget install Microsoft.ServiceFabric.CollectSFData  
-      1. cd .\Microsoft.ServiceFabric.CollectSFData.{{ version }}\lib\net48
+      1. nuget install Microsoft.ServiceFabric.CollectSFDataGui  
+      1. cd .\Microsoft.ServiceFabric.CollectSFDataGui.{{ version }}\lib\net48
 
     b. github  
-      1. [collectsfdata.zip](https://github.com/microsoft/CollectServiceFabricData/releases/latest)  
+      1. [CollectSFDataGui.zip](https://github.com/microsoft/CollectServiceFabricData/releases/latest)  
       1. extract zip to working directory
 1. From working directory, use command prompt / powershell to execute utility
-1. [Configuration](#configuration) can be passed as command line arguments or in json files.  a default configuration file collectsfdata.options.json is included in the working directory.
-1. For help, type 'collectsfdata.exe /?'
+1. [Configuration](#configuration) can be passed as command line arguments or in json files.  a default configuration file CollectSFDataGui.options.json is included in the working directory.
+1. For help, type 'CollectSFDataGui.exe /?'
 
-### CollectSFData Setup with Kusto
+### CollectSFDataGui Setup with Kusto
 
 If using Kusto, an existing online Kusto database with authentication is required. See [/docs/kustoQuickStart.md](/docs/kustoQuickStart.md)  
 
@@ -86,11 +55,11 @@ If using Kusto, an existing online Kusto database with authentication is require
 - Resource id should be your Kusto cluster URL, e.g. https://mycluster.kusto.windows.net or https://mycluster.kustomfa.windows.net.  
 - [Azure Data Explorer Pricing](https://azure.microsoft.com/en-us/pricing/details/data-explorer/).
 
-NOTE: when specifying kusto url for collectsfdata, url must be in the ingest url and in the format of https://ingest-{{kusto cluster}}{{. optional location }}.kusto.windows.net/{{kusto database}}  
+NOTE: when specifying kusto url for CollectSFDataGui, url must be in the ingest url and in the format of https://ingest-{{kusto cluster}}{{. optional location }}.kusto.windows.net/{{kusto database}}  
 Example: https://ingest-sfcluster.eastus.kusto.windows.net/sfdatabase  
 Example: https://ingest-sfcluster.kusto.windows.net/sfdatabase  
 
-### CollectSFData Setup with Log Analytics
+### CollectSFDataGui Setup with Log Analytics
 
 If using Log Analytics (OMS), an existing or new workspace is required. See [/docs/logAnalyticsQuickStart.md](/docs/logAnalyticsQuickStart.md)  
 
@@ -102,19 +71,19 @@ If using Log Analytics (OMS), an existing or new workspace is required. See [/do
 
 [Additional configurations](/docs/configuration.md)  
 
-To configure CollectSFData, either command line or json or both can be used.
-If exists, default configuration file 'collectsfdata.options.json' will always be read first.
+To configure CollectSFDataGui, either command line or json or both can be used.
+If exists, default configuration file 'CollectSFDataGui.options.json' will always be read first.
 Any additional configuration files specified on command line with -config will be loaded next.
 Finally any additional arguments passed on command line will be loaded last.
 
 ### Command line options
 
-For help with command line options, type 'collectsfdata.exe -?'.  
+For help with command line options, type 'CollectSFDataGui.exe -?'.  
 **NOTE:** command line options **are** case sensitive.
 
 ```text
-C:\>CollectSFData.exe /?
-Usage: CollectSFData [options]
+C:\>CollectSFDataGui.exe /?
+Usage: CollectSFDataGui [options]
 
 Options:
   -?|--?                             Show help information
@@ -137,8 +106,8 @@ Options:
   -tenant|--azureTenantId            [string] azure tenant id for use with kusto AAD authentication
   -cache|--cacheLocation             [string] Write files to this output location. e.g. "C:\Perfcounters\Output"
   -config|--configurationFile        [string] json file containing configuration options.
-                                         type collectsfdata.exe -save default.json to create a default file.
-                                         if collectsfdata.options.json exists, it will be used for configuration.
+                                         type CollectSFDataGui.exe -save default.json to create a default file.
+                                         if CollectSFDataGui.options.json exists, it will be used for configuration.
   -cf|--containerFilter              [string] string / regex to filter container names
   -dc|--deleteCache                  [bool] delete downloaded blobs from local disk at end of execution.
   -to|--stop                         [DateTime] end time range to collect data to. default is now.
@@ -189,7 +158,7 @@ Options:
                                          use logdebug levels for troubleshooting utility
   -log|--logFile                     [string] file name and path to save console output.
                                          can optionally specify .net datetime format specifier inside '<>'.
-                                         example: collectsfdata-<yyyy-MM-dd-HH-mm-ss>.log
+                                         example: CollectSFDataGui-<yyyy-MM-dd-HH-mm-ss>.log
   -nf|--nodeFilter                   [string] string / regex Filter on node name or any string in blob url
                                          (case-insensitive comparison)
   -timeout|--noProgressTimeoutMin    [int] no progress timer in minutes. set to 0 to disable timeout.
@@ -197,7 +166,7 @@ Options:
   -s|--sasKey                        [string] source blob SAS key required to access service fabric sflogs
                                          blob storage.
   -save|--saveConfiguration          [string] file name and path to save current configuration
-                                         specify file name 'collectsfdata.options.json' to create default configuration file.
+                                         specify file name 'CollectSFDataGui.options.json' to create default configuration file.
   -from|--start                      [DateTime] start time range to collect data from.
                                          default is -2 hours.
                                          example: "03/22/2023 16:24:01 -04:00"
@@ -219,26 +188,26 @@ For additional json configuration files see [configurationFiles](/configurationF
 
 ### Default JSON configuration file
 
-To use a default configuration file without having to specify on the command line, create a file named **'collectsfdata.options.json'** in the working directory using example file or json below.
+To use a default configuration file without having to specify on the command line, create a file named **'CollectSFDataGui.options.json'** in the working directory using example file or json below.
 
 ## Examples
 
 [Additional examples](/docs/examples.md)  
 
-Some basic examples on how to use arguments and configuration files. For additional examples, type 'collectsfdata.exe -ex'
+Some basic examples on how to use arguments and configuration files. For additional examples, type 'CollectSFDataGui.exe -ex'
 
 ### Example Kusto with minimal arguments
 
 ```text
-collectsfdata.exe -type trace -s "<% sasKey %>" -kc "https://<% kusto ingest name %>.<% location %>.kusto.windows.net/<% kusto database %>" -kt "<% kusto table name %>"
-collectsfdata.exe -type trace -s "https://sflogsxxxxxxxxxxxxx.blob.core.windows.net/?sv=2017-11-09&ss=bfqt&srt=sco&sp=rwdlacup&se=2018-12-05T23:51:08Z&st=2018-11-05T15:51:08Z&spr=https&sig=VYT1J9Ene1NktyCgsu1gEH%2FN%2BNH9zRhJO05auUPQkSA%3D" -kc https://ingest-kustodb.eastus.kusto.windows.net/serviceFabricDB -kt "fabric_traces"
+CollectSFDataGui.exe -type trace -s "<% sasKey %>" -kc "https://<% kusto ingest name %>.<% location %>.kusto.windows.net/<% kusto database %>" -kt "<% kusto table name %>"
+CollectSFDataGui.exe -type trace -s "https://sflogsxxxxxxxxxxxxx.blob.core.windows.net/?sv=2017-11-09&ss=bfqt&srt=sco&sp=rwdlacup&se=2018-12-05T23:51:08Z&st=2018-11-05T15:51:08Z&spr=https&sig=VYT1J9Ene1NktyCgsu1gEH%2FN%2BNH9zRhJO05auUPQkSA%3D" -kc https://ingest-kustodb.eastus.kusto.windows.net/serviceFabricDB -kt "fabric_traces"
 ```
 
 ### Example Log Analytics with minimal arguments
 
 ```text
-collectsfdata.exe -type trace -s "<% sasKey %>" -kc "https://<% kusto ingest name %>.<% location %>.kusto.windows.net/<% kusto database %>" -kt "<% kusto table name %>"
-collectsfdata.exe -type trace -s "https://sflogsxxxxxxxxxxxxx.blob.core.windows.net/?sv=2017-11-09&ss=bfqt&srt=sco&sp=rwdlacup&se=2018-12-05T23:51:08Z&st=2018-11-05T15:51:08Z&spr=https&sig=VYT1J9Ene1NktyCgsu1gEH%2FN%2BNH9zRhJO05auUPQkSA%3D" -kc https://ingest-kustodb.eastus.kusto.windows.net/serviceFabricDB -kt "fabric_traces"
+CollectSFDataGui.exe -type trace -s "<% sasKey %>" -kc "https://<% kusto ingest name %>.<% location %>.kusto.windows.net/<% kusto database %>" -kt "<% kusto table name %>"
+CollectSFDataGui.exe -type trace -s "https://sflogsxxxxxxxxxxxxx.blob.core.windows.net/?sv=2017-11-09&ss=bfqt&srt=sco&sp=rwdlacup&se=2018-12-05T23:51:08Z&st=2018-11-05T15:51:08Z&spr=https&sig=VYT1J9Ene1NktyCgsu1gEH%2FN%2BNH9zRhJO05auUPQkSA%3D" -kc https://ingest-kustodb.eastus.kusto.windows.net/serviceFabricDB -kt "fabric_traces"
 ```
 
 ### Example JSON configuration file options
@@ -273,7 +242,7 @@ collectsfdata.exe -type trace -s "https://sflogsxxxxxxxxxxxxx.blob.core.windows.
 
 ## Reporting Issues and Feedback
 
-If you find any bugs when using CollectSFData, search and if not found, please create a new issue on [issues](../../issues) page. Provide relevant configuration, error, and steps to reproduce.
+If you find any bugs when using CollectSFDataGui, search and if not found, please create a new issue on [issues](../../issues) page. Provide relevant configuration, error, and steps to reproduce.
 
 ## Contributing
 
