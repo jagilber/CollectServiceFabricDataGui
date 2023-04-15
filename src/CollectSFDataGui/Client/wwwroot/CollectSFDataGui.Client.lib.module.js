@@ -4,6 +4,15 @@ export function beforeStart(options, extensions) {
 }
 
 export function afterStarted(blazor) {
+    downloadFileJS()
+}
+
+export function scrollToBottom() {
+    window.scrollTo(0, document.body.scrollHeight);
+}
+
+function downloadFileJS() {
+    // working for JS file download
     window.downloadFileFromStream = async (fileName, contentStreamReference) => {
         const arrayBuffer = await contentStreamReference.arrayBuffer();
         const blob = new Blob([arrayBuffer]);
@@ -11,6 +20,7 @@ export function afterStarted(blazor) {
         const anchorElement = document.createElement('a');
         anchorElement.href = url;
         anchorElement.download = fileName ?? '';
+        anchorElement.target = '_blank';
         anchorElement.click();
         anchorElement.remove();
         URL.revokeObjectURL(url);
