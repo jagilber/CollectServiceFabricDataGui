@@ -1,13 +1,15 @@
 ﻿@inherits LayoutComponentBase
-@* <link rel="stylesheet" href="wwwroot/css/material-dark-base.css"> *@
+
 <RadzenDialog/>
 <div class="page">
-    <div class="sidebar" style="background-image:none;background-color:#f7f7f7;">
-        <NavMenu />
-    </div>
-
+    @if (IsOpened){
+        <div class="sidebar">
+            <NavMenu />
+        </div>
+    }
     <div class="main">
         <div class="top-row px-4">
+            <RadzenButton Click="()=>IsOpened = !IsOpened" Text=@( this.IsOpened ? "<<" : ">>") ButtonStyle="ButtonStyle.Primary" />
             <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
         </div>
 
@@ -16,3 +18,7 @@
         </div>
     </div>
 </div>
+
+@code {
+     bool IsOpened {get; set;} = true;
+}
