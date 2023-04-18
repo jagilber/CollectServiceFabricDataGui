@@ -15,6 +15,11 @@
 @inject ILogger<Configuration> logger
 @inject IJSRuntime JS
 
+@* 
+razor syntax: https://learn.microsoft.com/en-us/aspnet/core/mvc/views/razor?view=aspnetcore-8.0
+todo: https://learn.microsoft.com/en-us/aspnet/core/blazor/state-management?view=aspnetcore-8.0&pivots=server
+https://learn.microsoft.com/en-us/aspnet/core/blazor/security/webassembly/standalone-with-azure-active-directory?view=aspnetcore-8.0
+ *@
 <style>
     form .row {
         margin-bottom: 16px;
@@ -57,16 +62,6 @@ else
                             <RadzenDatePicker style="width: 100%;" Name="EndDate" @bind-Value=@config.EndTimeUtc />
                         </div>
                     </div>
-                </RadzenFieldset>
-                <RadzenFieldset Text="Table Information">
-                    <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
-                            <RadzenLabel Text="Table Name" />
-                        </div>
-                        <div class="col-md-8">
-                            <RadzenTextBox @bind-Value=@tableName style="width: 100%;" Name="TableName" />
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="col-md-4 align-items-center d-flex">
                             <RadzenLabel Text="Cluster Resource Uri" />
@@ -75,14 +70,24 @@ else
                             <RadzenTextBox @bind-Value=@config.ResourceUri Placeholder="enter cluster resource uri (for support use only)" style="width: 100%;" />
                         </div>
                     </div>
+                </RadzenFieldset>
+                <RadzenFieldset Text="Table Information">
                     <RadzenTabs SelectedIndex="0">
                         <Tabs>
                             <RadzenTabsItem Text="Kusto">
                                 <div class="row">
-                                    <div class="align-items-center d-flex col-md-2">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                        <RadzenLabel Text="Kusto Table Name" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <RadzenTextBox @bind-Value=@config.KustoTable style="width: 100%;" Name="KustoTableName" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
                                         <RadzenLabel Text="Kusto Cluster" />
                                     </div>
-                                    <div class="col-md-10">
+                                    <div class="col-md-8">
                                         <RadzenTextBox @bind-Value=@config.KustoCluster
                                         Placeholder="https://ingest-sfcluster.kusto.windows.net/sfdatabase"
                                         style="width: 100%;" Name="KustoCluster" />
@@ -143,64 +148,72 @@ else
                                 </div>
                             </RadzenTabsItem>
                             <RadzenTabsItem Text="Log Analytics">
-                            <div class="row">
-                                <div class="col-md-4 align-items-center d-flex">
-                                    <RadzenLabel Text="Log Analytics Id" />
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                <RadzenLabel Text="Log Analytics Table Name" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <RadzenTextBox @bind-Value=@config.LogAnalyticsName style="width: 100%;" Name="log analytics table name" />
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <RadzenTextBox @bind-Value=@config.LogAnalyticsId style="width: 100%;" Placeholder="log analytics workspace id" />
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                        <RadzenLabel Text="Log Analytics Id" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <RadzenTextBox @bind-Value=@config.LogAnalyticsId style="width: 100%;" Placeholder="log analytics workspace id" />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 align-items-center d-flex">
-                                    <RadzenLabel Text="Log Analytics Key" />
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                        <RadzenLabel Text="Log Analytics Key" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <RadzenTextBox @bind-Value=@config.LogAnalyticsKey style="width: 100%;" Placeholder="log analytics workspace key" />
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <RadzenTextBox @bind-Value=@config.LogAnalyticsKey style="width: 100%;" Placeholder="log analytics workspace key" />
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                        <RadzenLabel Text="Log Analytics Workspace Name" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <RadzenTextBox @bind-Value=@config.LogAnalyticsWorkspaceName style="width: 100%;" Placeholder="name of log analytics workspace name (for creation only)" />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 align-items-center d-flex">
-                                    <RadzenLabel Text="Log Analytics Workspace Name" />
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                        <RadzenLabel Text="Log Analytics Workspace Sku" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <RadzenTextBox @bind-Value=@config.LogAnalyticsWorkspaceSku style="width: 100%;" Placeholder="name of log analytics workspace sku typically 'PerGB2018'" />
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <RadzenTextBox @bind-Value=@config.LogAnalyticsWorkspaceName style="width: 100%;" Placeholder="name of log analytics workspace name (for creation only)" />
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                        <RadzenLabel Text="Log Analytics Create Table" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <RadzenSelectBar @bind-Value=@config.LogAnalyticsCreate TValue="bool">
+                                            <Items>
+                                                <RadzenSelectBarItem Text="On" Value="true" />
+                                                <RadzenSelectBarItem Text="Off" Value="false" />
+                                            </Items>
+                                        </RadzenSelectBar>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 align-items-center d-flex">
-                                    <RadzenLabel Text="Log Analytics Workspace Sku" />
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                        <RadzenLabel Text="Log Analytics Recreate Table" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <RadzenSelectBar @bind-Value=@config.LogAnalyticsRecreate TValue="bool">
+                                            <Items>
+                                                <RadzenSelectBarItem Text="On" Value="true" />
+                                                <RadzenSelectBarItem Text="Off" Value="false" />
+                                            </Items>
+                                        </RadzenSelectBar>
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <RadzenTextBox @bind-Value=@config.LogAnalyticsWorkspaceSku style="width: 100%;" Placeholder="name of log analytics workspace sku typically 'PerGB2018'" />
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 align-items-center d-flex">
-                                    <RadzenLabel Text="Log Analytics Create Table" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenSelectBar @bind-Value=@config.LogAnalyticsCreate TValue="bool">
-                                        <Items>
-                                            <RadzenSelectBarItem Text="On" Value="true" />
-                                            <RadzenSelectBarItem Text="Off" Value="false" />
-                                        </Items>
-                                    </RadzenSelectBar>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 align-items-center d-flex">
-                                    <RadzenLabel Text="Log Analytics Recreate Table" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenSelectBar @bind-Value=@config.LogAnalyticsRecreate TValue="bool">
-                                        <Items>
-                                            <RadzenSelectBarItem Text="On" Value="true" />
-                                            <RadzenSelectBarItem Text="Off" Value="false" />
-                                        </Items>
-                                    </RadzenSelectBar>
-                                </div>
-                            </div>
                             </RadzenTabsItem>
                         </Tabs>
                     </RadzenTabs>
@@ -233,15 +246,11 @@ else
                 </RadzenFieldset>
                 <RadzenFieldset Text="Operations">
                     <div class="row justify-content-left">
-                        @* <RadzenButton Text="Upload" Click=@(args => upload.Upload()) Style="margin-left: 20px;" />
-                        <RadzenUpload @ref="upload" Auto="false" Multiple="false" Url="upload/single" Style="margin-left: 20px;"
-                        Change=@(args => OnChange(args, "Manual Upload")) Progress=@(args => OnProgress(args, "Manual Upload"))
-                        Complete=@OnComplete /> *@
                         <RadzenUpload
                             ChooseText="Upload" 
                             Url="upload/single" 
                             Style="margin-left: 20px;"
-                            Complete=@(args => OnUploadComplete(args))
+                            Complete="@(args => OnUploadComplete(args))"
                         />
                     </div>
                     <div class="row justify-content-left">
@@ -496,7 +505,7 @@ else
     private List<string> GatherTypes;
     private ConfigurationProperties config { get; set; }
     private ConfigurationProperties tempconfig { get; set; }
-    private string tableName;
+    //private string tableName;
 
     // file upload
     EventConsole console;
@@ -521,10 +530,16 @@ else
         Http.CancelPendingRequests();
     }
 
+    void ConsoleLog(string message) {
+        console?.Log(message);
+    }
+
     async Task GetCurrentConfig()
     {
+        config = new ConfigurationProperties();
         config = await Http.GetFromJsonAsync<ConfigurationProperties>("api/configurationJson", JsonHelpers.GetJsonSerializerOptions());
-        tableName = config.KustoTable;
+        ConsoleLog($"GetCurrentConfig():Server response: {JsonSerializer.Serialize(config)}");
+        //tableName = config.KustoTable;
     }
 
     void OnKeyPress(string value, Radzen.DialogService sender) {
@@ -544,7 +559,7 @@ else
     {
         string jsonString = args.RawResponse;
 
-        console.Log($"Server response: {jsonString}");
+        ConsoleLog($"Server response: {jsonString}");
         UpdateConfig(jsonString);
     }
 
@@ -618,25 +633,25 @@ else
     {
         HttpResponseMessage response = new HttpResponseMessage();
         if(!string.IsNullOrEmpty(uploadedJson)) {
-            response = await Http.PostAsJsonAsync("api/configuration/update", uploadedJson, JsonHelpers.GetJsonSerializerOptions());    
+            response = await Http.PostAsJsonAsync("api/configuration/update", uploadedJson, JsonHelpers.GetJsonSerializerOptions());
         }
         else {
             response = await Http.PostAsJsonAsync<ConfigurationProperties>("api/configuration/update", config, JsonHelpers.GetJsonSerializerOptions());
         }
         string jsonString = await response.Content.ReadAsStringAsync();
-        console.Log($"UpdateConfig:responseString:{jsonString}");
+        ConsoleLog($"UpdateConfig:responseString:{jsonString}");
         jsonString = jsonString.Replace("\"{", "{").Replace("}\"", "}").Replace("\\\"", "\"");
 
         if(response.StatusCode == HttpStatusCode.Created){
             ConfigurationProperties configurationProperties = JsonSerializer.Deserialize<ConfigurationProperties>(jsonString, JsonHelpers.GetJsonSerializerOptions());
-            console.Log($"UpdateConfig:configurationProperties:{configurationProperties.NoProgressTimeoutMin}");
+            ConsoleLog($"UpdateConfig:configurationProperties:{configurationProperties.NoProgressTimeoutMin}");
             config = configurationProperties;
-            tableName = config.KustoTable;
-            console.Log($"UpdateConfig:exit:properties changed");
+            //tableName = config.KustoTable;
+            ConsoleLog($"UpdateConfig:exit:properties changed");
         }
         else
         {
-            console.Log($"ERROR:{response.StatusCode}");
+            ConsoleLog($"ERROR:{response.StatusCode}");
             await GetCurrentConfig();
         }
     }
