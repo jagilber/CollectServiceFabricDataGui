@@ -7,7 +7,7 @@
       "type": "process",
       "args": [
         "build",
-        "${workspaceFolder}/src/CollectSFData/CollectSFData.csproj",
+        "${workspaceFolder}/src/CollectSFDataGui.sln",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -23,7 +23,7 @@
       "type": "process",
       "args": [
         "publish",
-        "${workspaceFolder}/src/CollectSFData/CollectSFData.csproj",
+        "${workspaceFolder}/src/CollectSFDataGui.sln",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -36,7 +36,7 @@
       "args": [
         "watch",
         "run",
-        "${workspaceFolder}/src/CollectSFData/CollectSFData.csproj",
+        "${workspaceFolder}/src/CollectSFDataGui.sln",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],

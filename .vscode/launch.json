@@ -8,7 +8,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (Blazor Standalone) step 1 (works for debugging client and server)",
+            "name": ".NET Core Launch step 1 (Blazor Standalone) (works for debugging client and server)",
             "type": "coreclr",
             "request": "launch",
             "justMyCode": false,
@@ -24,7 +24,7 @@
         },
         {
             "trace": true,
-            "name": ".NET Core Debug Blazor Web Assembly in Edge step 2 (works for debugging client and server)",
+            "name": ".NET Core Launch step 2 (Web Assembly) in Edge (works for debugging client and server)",
             "type": "msedge",
             "request": "launch",
             "timeout": 30000,
@@ -33,24 +33,7 @@
             "webRoot": "${workspaceFolder}/src/CollectSFDataGui"
         },
         {
-            "name": ".NET Core 31 Launch with Args (console)",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/bin/Debug/netcoreapp3.1/CollectSFData.dll",
-            "args": [
-                //"${input:args}"
-                "-type",
-                "trace",
-                "-debug",
-                "3"
-            ],
-            "cwd": "${workspaceFolder}/src/bin/Debug/netcoreapp3.1",
-            "stopAtEntry": false,
-            "console": "internalConsole",
-        },
-        {
-            "name": ".NET Core 7 Launch with Args (console)",
+            "name": ".NET Core 6 Launch with Args (console)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
@@ -63,28 +46,6 @@
             "cwd": "${workspaceFolder}/src/bin/Debug/net6.0",
             "stopAtEntry": false,
             "console": "internalConsole",
-        },
-        {
-            "name": "NET 7 Launch (console)",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/bin/Debug/net6.0/CollectSFData.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/src/bin/Debug/net6.0",
-            "console": "internalConsole",
-            "stopAtEntry": false
-        },
-        {
-            "name": ".NET Core 31 Launch (console)",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/bin/Debug/netcoreapp3.1/CollectSFData.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/src/bin/Debug/netcoreapp3.1",
-            "console": "internalConsole",
-            "stopAtEntry": false
         },
         {
             "name": ".NET Core Attach",
