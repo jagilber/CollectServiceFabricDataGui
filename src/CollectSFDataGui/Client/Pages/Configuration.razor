@@ -6,6 +6,7 @@
 @using BlazorApp.Helpers
 @using Microsoft.Extensions.Logging
 @using System.IO
+@using System.Text
 @using System.Text.Json
 @using System.Text.Json.Serialization
 @using System.Net
@@ -502,16 +503,11 @@ else
 }
 
 @code {
-    private List<string> GatherTypes;
-    private ConfigurationProperties config { get; set; }
-    private ConfigurationProperties tempconfig { get; set; }
-    //private string tableName;
-
-    // file upload
+    List<string> GatherTypes;
+    ConfigurationProperties config { get; set; }
+    ConfigurationProperties tempconfig { get; set; }
     EventConsole console;
-    //RadzenUpload upload;
-    //int progress;
-    //string info;
+    List<string> queuedConsoleMessages = new List<string>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -530,15 +526,27 @@ else
         Http.CancelPendingRequests();
     }
 
-    void ConsoleLog(string message) {
-        console?.Log(message);
+    void ConsoleLog(string message, object jsonObject = null) {
+        if(jsonObject !=null) {
+            StringBuilder sb = new StringBuilder(message);
+            sb.AppendLine(JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true}));
+            message = sb.ToString();
+        }
+
+        queuedConsoleMessages.Add(message);
+
+        if(console != null) {
+            foreach(string queuedMessage in queuedConsoleMessages) {
+                console.Log(queuedMessage);
+            }
+        }
     }
 
     async Task GetCurrentConfig()
     {
-        config = new ConfigurationProperties();
+        //config = new ConfigurationProperties();
         config = await Http.GetFromJsonAsync<ConfigurationProperties>("api/configurationJson", JsonHelpers.GetJsonSerializerOptions());
-        ConsoleLog($"GetCurrentConfig():Server response: {JsonSerializer.Serialize(config)}");
+        ConsoleLog($"GetCurrentConfig():Server response:", config);
         //tableName = config.KustoTable;
     }
 
