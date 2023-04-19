@@ -1,5 +1,5 @@
 .navbar-toggler {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: darkgray;
 }
 
 .top-row {
@@ -23,32 +23,35 @@
     padding-bottom: 0.5rem;
 }
 
-    .nav-item:first-of-type {
-        padding-top: 1rem;
-    }
+.nav-item:first-of-type {
+    padding-top: 1rem;
+}
 
-    .nav-item:last-of-type {
-        padding-bottom: 1rem;
-    }
+.nav-item:last-of-type {
+    padding-bottom: 1rem;
+}
 
-    .nav-item ::deep a {
-        color: #2b2a2a;
-        border-radius: 4px;
-        height: 3rem;
-        display: flex;
-        align-items: center;
-        line-height: 3rem;
-    }
+.nav-item ::deep a {
+    /* color: #2b2a2a; */
+    color:darkgrey;
+    border-radius: 4px;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    line-height: 3rem;
+}
 
-        .nav-item ::deep a.active {
-            background-color: rgba(255,255,255,0.25);
-            color: #2b2a2a;;
-        }
+.nav-item ::deep a.active {
+    background-color: rgba(255,255,255,0.25);
+    /* color: #2b2a2a; */
+    color:darkgrey;
+}
 
-        .nav-item ::deep a:hover {
-            background-color: rgba(255,255,255,0.1);
-            color: #2b2a2a;
-        }
+.nav-item ::deep a:hover {
+    background-color: rgba(255,255,255,0.1);
+    /* color: #2b2a2a; */
+    color:darkgrey;
+}
 
 @media (min-width: 641px) {
     .navbar-toggler {
