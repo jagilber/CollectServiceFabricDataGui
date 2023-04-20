@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <!-- <PackageReference Include="Microsoft.ServiceFabric.CollectSFData" Version="2.9.2302.10517" /> -->
-    <PackageReference Include="Microsoft.ServiceFabric.CollectSFData" Version="2.9.2304.11304" />
+    <PackageReference Include="Microsoft.ServiceFabric.CollectSFData" Version="2.9.2304.11613" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.15" />
     <PackageReference Include="System.Net.Http.Json" Version="7.0.1" />
   </ItemGroup>

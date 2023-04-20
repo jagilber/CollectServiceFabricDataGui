@@ -16,11 +16,6 @@
 @inject ILogger<Configuration> logger
 @inject IJSRuntime JS
 
-@* 
-razor syntax: https://learn.microsoft.com/en-us/aspnet/core/mvc/views/razor?view=aspnetcore-8.0
-todo: https://learn.microsoft.com/en-us/aspnet/core/blazor/state-management?view=aspnetcore-8.0&pivots=server
-https://learn.microsoft.com/en-us/aspnet/core/blazor/security/webassembly/standalone-with-azure-active-directory?view=aspnetcore-8.0
- *@
 <style>
     form .row {
         margin-bottom: 16px;
@@ -253,18 +248,12 @@ else
                             Style="margin-left: 20px;"
                             Complete="@(args => OnUploadComplete(args))"
                         />
-                    </div>
-                    <div class="row justify-content-left">
-                        @* <RadzenButton ButtonType="ButtonType.Submit" Icon="save" style="margin-left: 20px;" Text="Save" /> *@
-                         <RadzenButton Text="Save" ButtonStyle="ButtonStyle.Secondary" style="margin-left: 20px;" Click=@SaveOptionsFile />
-                    </div>
-                    <div class="row justify-content-left">
-                        <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="margin-left: 20px;" Text="Cancel"
-                        Click="@Cancel" />
+                        <RadzenButton Text="Save" ButtonStyle="ButtonStyle.Secondary" style="margin-left: 20px;" Click=@SaveOptionsFile />
+                        <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="margin-left: 20px;" Text="Cancel" Click="@Cancel" />
                     </div>
                 </RadzenFieldset>
             </div>
-            <div class="col-md-6">                
+            <div class="col-md-6">
                 <RadzenFieldset Text="Authorization">
                     <RadzenTabs SelectedIndex="0">
                         <Tabs>
