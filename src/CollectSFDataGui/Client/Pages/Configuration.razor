@@ -47,7 +47,7 @@ else
                             <RadzenLabel Text="Start Time Stamp" />
                         </div>
                         <div class="col-md-8">
-                            <RadzenDatePicker style="width: 100%;" Name="StartDate" @bind-Value=@config.StartTimeUtc />
+                            <RadzenDatePicker style="width: 100%;" Name="StartDate" @bind-Value=@config.StartTimeUtc ShowTime="true" ShowTimeOkButton="true" />
                         </div>
                     </div>
                     <div class="row">
@@ -55,7 +55,7 @@ else
                             <RadzenLabel Text="End Time Stamp" />
                         </div>
                         <div class="col-md-8">
-                            <RadzenDatePicker style="width: 100%;" Name="EndDate" @bind-Value=@config.EndTimeUtc />
+                            <RadzenDatePicker style="width: 100%;" Name="EndDate" @bind-Value=@config.EndTimeUtc ShowTime="true" ShowTimeOkButton="true" />
                         </div>
                     </div>
                     <div class="row">
@@ -296,13 +296,13 @@ else
                                         <RadzenLabel Text="Token Start Time Utc" />
                                     </div>
                                     <div class="col-md-3">
-                                        <RadzenDatePicker style="width: 100%;" TValue="DateTime" @bind-Value=@config.SasEndpointInfo.Parameters.SignedStartUtc Disabled="true" ReadOnly="true" />
+                                        <RadzenDatePicker style="width: 100%;" TValue="DateTime" @bind-Value=@config.SasEndpointInfo.Parameters.SignedStartUtc Disabled="true" ReadOnly="true"/>
                                     </div>
                                     <div class="align-items-center d-flex col-md-3">
                                         <RadzenLabel Text="Token Expire Time Utc" />
                                     </div>
                                     <div class="col-md-3">
-                                        <RadzenDatePicker style="width: 100%;" TValue="DateTime" @bind-Value=@config.SasEndpointInfo.Parameters.SignedExpiryUtc Disabled="true" ReadOnly="true" />
+                                        <RadzenDatePicker style="width: 100%;" TValue="DateTime" @bind-Value=@config.SasEndpointInfo.Parameters.SignedExpiryUtc Disabled="true" ReadOnly="true"/>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -316,7 +316,7 @@ else
                                         <RadzenLabel Text="Signed Resource Types" />
                                     </div>
                                     <div class="col-md-3">
-                                        <RadzenTextBox Value=@config.SasEndpointInfo.Parameters.SignedResourceTypes style="width: 100%;" Disabled="true" ReadOnly="true"/>                             
+                                        <RadzenTextBox Value=@config.SasEndpointInfo.Parameters.SignedResourceTypes style="width: 100%;" Disabled="true" ReadOnly="true"/>
                                     </div>
                                 </div>
                             </RadzenTabsItem>
@@ -521,7 +521,7 @@ else
     void ConsoleLog(string message, object jsonObject = null) {
         if(jsonObject !=null) {
             StringBuilder sb = new StringBuilder(message);
-            sb.AppendLine(JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true}));
+            sb.Append(JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true}));
             message = sb.ToString();
         }
 
@@ -540,7 +540,8 @@ else
         ConsoleLog($"GetCurrentConfig():Server response:", config);
     }
 
-    void OnKeyPress(string value, Radzen.DialogService sender) {
+    void OnKeyPress(string value, Radzen.DialogService sender) 
+    {
         //Enter
         var keyboardInput = value;
         if(keyboardInput == "Enter") {
@@ -548,7 +549,8 @@ else
         }
     }
 
-    void OnSetFileSavePath(string value) {
+    void OnSetFileSavePath(string value) 
+    {
 
         config.SaveConfiguration = value;
     }
@@ -577,47 +579,6 @@ else
         writer.Write(JsonSerializer.Serialize(config));
 
         return new MemoryStream(fileStream.ToArray());
-    }
-
-    // old working
-    async Task ShowSaveDialog()
-    {
-        var result = await DialogService.OpenAsync("Save", ds =>
-        @<div>
-            <p class="mb-4">Save configuration</p>
-            <div class="row">
-                <div class="col">
-                    <RadzenButton Text="Ok" Click="() => ds.Close(true)" class="me-1" Style="width: 80px;" />
-                    <RadzenButton Text="Cancel" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" class="me-1" />
-                    <RadzenText>File:</RadzenText>
-                    <RadzenTextBox @onkeypress=@(args => OnKeyPress(args.Key.ToString(),ds)) Placeholder=@(config.SaveConfiguration) Change=@(args => OnSetFileSavePath(args)) class="w-100" />
-                </div>
-            </div>
-        </div>);
-
-        if(result) {
-            try {
-                // normalize path for JS and all OS
-                config.SaveConfiguration = config.SaveConfiguration.Replace("\\","/").TrimStart('/');
-                UpdateConfig();
-                string directory = Directory.GetParent(config.SaveConfiguration).FullName;
-                logger.LogInformation($"checking filepath. {config.SaveConfiguration}");
-                logger.LogInformation($"checking filepath directory. {directory}");
-
-                if (!string.IsNullOrEmpty(config.SaveConfiguration) 
-                    && !string.IsNullOrEmpty(directory)
-                    && !Directory.Exists(directory)) {
-                    Directory.CreateDirectory(directory);
-                }
-
-                using var fileMemoryStream = Serialize();
-                using FileStream fileStream = new FileStream(config.SaveConfiguration, FileMode.Create);
-                fileStream.Write(fileMemoryStream.ToArray());
-            }
-            catch (Exception e) {
-                logger.LogError($"exception saving file. {e}");
-            }
-        }
     }
 
     async Task SaveOptionsFile()
@@ -656,8 +617,8 @@ else
         else
         {
             ConsoleLog($"ERROR:{response.StatusCode}");
-            //await GetCurrentConfig();
         }
+
         await RefreshData();
     }
 }

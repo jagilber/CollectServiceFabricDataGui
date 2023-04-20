@@ -9,9 +9,11 @@
     <RadzenStack Orientation="Orientation.Vertical" Gap="0" ID="event-console" Class="rz-pt-1" Style="border-top: var(--rz-grid-cell-border); min-height: 2rem; max-height: 12rem; overflow: auto;">
     @foreach(var message in messages)
     {
+        <span style="white-space: pre-line">
         <RadzenAlert ShowIcon="false" Variant="Variant.Flat" AlertStyle="AlertStyle.Info" Size="AlertSize.ExtraSmall" Shade="Shade.Lighter" AllowClose="false" Style="font-size: 0.75rem">
             @message.Date.ToString("HH:mm:ss.ff") <span Style="color: var(--rz-text-color)">@message.Text</span>
         </RadzenAlert>
+        </span>
     }
     </RadzenStack>
 </RadzenStack>
