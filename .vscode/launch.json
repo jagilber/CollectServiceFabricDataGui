@@ -11,6 +11,7 @@
             "name": ".NET Core Launch step 1 (Blazor Standalone) (works for debugging client and server)",
             "type": "coreclr",
             "request": "launch",
+            "preLaunchTask": "build",
             "justMyCode": false,
             "program": "${workspaceFolder}/src/CollectSFDataGui/Server/bin/Debug/net6.0/CollectSFDataGui.Server.dll",
             "args": [],
