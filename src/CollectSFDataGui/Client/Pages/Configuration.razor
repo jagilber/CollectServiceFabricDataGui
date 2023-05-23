@@ -28,6 +28,7 @@
 }
 else
 {
+    <h4 class="rz-text-h4">Configuration</h4>
     <RadzenTemplateForm Data="@config" Submit="@((ConfigurationProperties args) => { Submit(args); })">
         <div class="row">
             <div class="col-md-6">
@@ -243,13 +244,14 @@ else
                 <RadzenFieldset Text="Operations">
                     <div class="row justify-content-left">
                         <RadzenUpload
+                            class="custom-upload"
                             ChooseText="Upload" 
                             Url="upload/single" 
                             Style="margin-left: 20px;"
                             Complete="@(args => OnUploadComplete(args))"
                         />
                         <RadzenButton Text="Save" ButtonStyle="ButtonStyle.Secondary" style="margin-left: 20px;" Click=@SaveOptionsFile />
-                        <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="margin-left: 20px;" Text="Cancel" Click="@Cancel" />
+                        <RadzenButton ButtonStyle="ButtonStyle.Light" style="margin-left: 20px;" Text="Cancel" Click="@Cancel" />
                     </div>
                 </RadzenFieldset>
             </div>
