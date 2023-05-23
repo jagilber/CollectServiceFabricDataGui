@@ -1,0 +1,40 @@
+@if (!SideBarPage.New && !SideBarPage.Updated)
+{
+    <RadzenPanelMenuItem @bind-Expanded=@Expanded Text="@SideBarPage.Name" Path="@SideBarPage.Path" Icon="@SideBarPage.Icon">
+        @ChildContent
+    </RadzenPanelMenuItem>
+}
+else
+{
+    <RadzenPanelMenuItem @bind-Expanded=@Expanded Text="@SideBarPage.Name" Path="@SideBarPage.Path" Icon="@SideBarPage.Icon">
+        <Template>
+            @SideBarPage.Name
+            <RadzenBadge Text="Updated" Visible=@SideBarPage.Updated BadgeStyle="BadgeStyle.Info" Shade="Shade.Lighter"/>
+            <RadzenBadge Text="New" Visible=@SideBarPage.New BadgeStyle="BadgeStyle.Success"/>
+        </Template>
+        <ChildContent>@ChildContent</ChildContent>
+    </RadzenPanelMenuItem>
+}
+@code {
+    [Parameter]
+    public SideBarPage SideBarPage { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public bool Expanded
+    {
+        get
+        {
+            return SideBarPage.Expanded;
+        }
+        set
+        {
+            SideBarPage.Expanded = value;
+        }
+    }
+
+    [Parameter]
+    public EventCallback<bool> ExpandedChanged { get; set; }
+}

@@ -1,24 +1,84 @@
-﻿@inherits LayoutComponentBase
+﻿@using Radzen.Blazor
+@inherits LayoutComponentBase
+@inject DialogService DialogService
+@inject HttpClient Http
+@inject NavigationManager navigationManager
+@inject IJSRuntime JS
 
-<RadzenDialog/>
 <div class="page">
-    @if (IsOpened){
-        <div class="sidebar">
-            <NavMenu />
-        </div>
-    }
     <div class="main">
-        <div class="top-row px-4">
-            <RadzenButton Click="()=>IsOpened = !IsOpened" Text=@( this.IsOpened ? "<<" : ">>") ButtonStyle="ButtonStyle.Primary" />
-            <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
-        </div>
-
-        <div class="content px-4">
-            @Body
-        </div>
+        <RadzenLayout>
+            <RadzenBody>
+                <RadzenSidebarToggle Click="@(args => { sidebarExpanded = !sidebarExpanded; bodyExpanded = !bodyExpanded; })">
+                </RadzenSidebarToggle>
+                <div class="content px-4">
+                    @Body
+                </div>
+            </RadzenBody>
+            <RadzenSidebar @ref="@sidebar0" @bind-Expanded="@sidebarExpanded" Class="demos-sidebar" style="display: flex; flex-direction: column">
+                <div style="flex: 1; overflow: auto">
+                    <RadzenPanelMenu Match="NavLinkMatch.Prefix">
+                        @foreach (var sideBarPage in sideBarPages)
+                        {
+                            <NavigationItem SideBarPage=@sideBarPage>
+                                @if (sideBarPage.Children != null)
+                                {
+                                    @foreach (var childPage in sideBarPage.Children)
+                                    {
+                                        if (childPage.Children != null)
+                                        {
+                                            <NavigationItem @bind-Expanded=@childPage.Expanded SideBarPage=@childPage>
+                                                @foreach (var child in childPage.Children)
+                                                {
+                                                    <NavigationItem @bind-Expanded=@child.Expanded SideBarPage=@child />
+                                                }
+                                            </NavigationItem>
+                                        }
+                                        else
+                                        {
+                                            <NavigationItem @bind-Expanded=@childPage.Expanded SideBarPage=@childPage />
+                                        }
+                                    }
+                                }
+                            </NavigationItem>
+                        }
+                    </RadzenPanelMenu>
+                </div>
+            </RadzenSidebar>
+        </RadzenLayout>
     </div>
 </div>
 
 @code {
-     bool IsOpened {get; set;} = true;
+    bool IsOpened {get; set;} = true;
+    RadzenSidebar sidebar0;
+    bool sidebarExpanded = true;
+    bool bodyExpanded = false;
+    List<SideBarPage> sideBarPages = new List<SideBarPage>();
+
+    protected override void OnInitialized() {
+        sideBarPages.Add(new SideBarPage {
+            Name = "Configuration",
+            Title = "Configuration",
+            Description = "Configure CollectSFData options",
+            Path = "/Configuration",
+            Icon = "&#xe871"
+        });
+
+        sideBarPages.Add(new SideBarPage {
+            Name = "Collection",
+            Title = "Collection",
+            Description = "Execute CollectSFData options",
+            Path = "/Collection",
+            Icon = "&#xe037"
+        });
+        
+        sideBarPages.Add(new SideBarPage {
+            Name = "Analysis",
+            Title = "Analysis",
+            Description = "Analyze collected data",
+            Path = "/Analysis",
+            Icon = "&#xe94c"
+        });
+    }
 }
