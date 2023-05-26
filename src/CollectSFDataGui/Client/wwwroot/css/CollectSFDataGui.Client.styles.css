@@ -50,9 +50,9 @@ a, .btn-link {
     top: 0.5rem;
 }
 
-/* Remove padding around radzen upload */
-/* https://forum.radzen.com/t/blazor-upload-replace-upload-button-with-icon/3610/2 */
-/* // Remove outer padding and background */
+.rz-button-text {
+    font-size: var(--rz-text-button-font-size);
+}
 
 .custom-upload .rz-fileupload-buttonbar {
     padding: 0;
