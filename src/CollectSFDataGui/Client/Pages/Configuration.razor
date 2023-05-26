@@ -250,8 +250,9 @@ else
                             Style="margin-left: 20px;"
                             Complete="@(args => OnUploadComplete(args))"
                         />
-                        <RadzenButton Text="Save" ButtonStyle="ButtonStyle.Secondary" style="margin-left: 20px;" Click=@SaveOptionsFile />
-                        <RadzenButton ButtonStyle="ButtonStyle.Light" style="margin-left: 20px;" Text="Cancel" Click="@Cancel" />
+                        <RadzenButton Text="Save" ButtonStyle="ButtonStyle.Primary" style="margin-left: 20px;" ButtonType="ButtonType.Submit" Icon="save" />
+                        <RadzenButton Text="Export" ButtonStyle="ButtonStyle.Secondary" style="margin-left: 20px;" Click=@SaveOptionsFile />
+                        <RadzenButton Text="Cancel" ButtonStyle="ButtonStyle.Light" style="margin-left: 20px;" Click="@Cancel" />
                     </div>
                 </RadzenFieldset>
             </div>
