@@ -52,12 +52,12 @@ a, .btn-link {
 
 .rz-button-text {
     font-size: var(--rz-text-button-font-size);
+    font-weight: var(--rz-text-button-font-weight);
 }
 
 .custom-upload .rz-fileupload-buttonbar {
     padding: 0;
     background: none;
-    height: 44px; /* force height to rz-button height */
 }
 
 
@@ -70,7 +70,7 @@ a, .btn-link {
     align-items: center;
     justify-content: center;
     background-color: crimson; 
-    height:inherit;
+    height: var(--rz-input-height);
 }
 
  /* // Remove styling applied when the user clicks the button  */
