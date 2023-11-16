@@ -13,7 +13,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             "justMyCode": false,
-            "program": "${workspaceFolder}/src/CollectSFDataGui/Server/bin/Debug/net6.0/CollectSFDataGui.Server.dll",
+            "program": "${workspaceFolder}/src/CollectSFDataGui/Server/bin/Debug/net8.0/CollectSFDataGui.Server.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/CollectSFDataGui/Server",
             "env": {
@@ -38,13 +38,13 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/bin/Debug/net6.0/CollectSFData.dll",
+            "program": "${workspaceFolder}/src/bin/Debug/net8.0/CollectSFData.dll",
             "args": [
                 //"${input:args}"
                 //"-config",
                 //".\\local.json"
             ],
-            "cwd": "${workspaceFolder}/src/bin/Debug/net6.0",
+            "cwd": "${workspaceFolder}/src/bin/Debug/net8.0",
             "stopAtEntry": false,
             "console": "internalConsole",
         },
