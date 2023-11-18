@@ -28,7 +28,9 @@
 }
 else
 {
-    <h4 class="rz-text-h4">Configuration</h4>
+    <h4 class="rz-text-h4">Configuration
+        <RadzenIcon Icon=@_configurationStatusIcon IconStyle=@_configurationStatusIconStyle Visible="true" />
+    </h4>
     <RadzenTemplateForm Data="@_config" Submit="@((ConfigurationProperties args) => { Submit(args); })">
         <div class="row">
             <div class="col-md-6">
@@ -532,6 +534,8 @@ else
     ConfigurationProperties _tempConfig { get; set; }
     EventConsole _console;
     List<string> _queuedConsoleMessages = new List<string>();
+    string _configurationStatusIcon = "info";
+    IconStyle _configurationStatusIconStyle = IconStyle.Info;
     const string _defaultConfigurationFile = "collectsfdata.options.json";
 
     protected override async Task OnInitializedAsync()
@@ -659,10 +663,14 @@ else
             JsonHelpers.GetJsonSerializerOptions());
             ConsoleLog($"UpdateConfig:configurationProperties:{configurationProperties.NoProgressTimeoutMin}");
             _config = configurationProperties;
+            _configurationStatusIcon = "check_circle";
+            _configurationStatusIconStyle = IconStyle.Success;
         }
         else
         {
             ConsoleLog($"ERROR:{response.StatusCode}");
+            _configurationStatusIcon = "error";
+            _configurationStatusIconStyle = IconStyle.Danger;
         }
 
         await RefreshData();
