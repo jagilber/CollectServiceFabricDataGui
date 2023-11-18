@@ -330,3 +330,4 @@ ASALocalRun/
 .mfractor/
 **/TestDataFiles/*
 **/manifests
+src/CollectSFDataGui/Server/collectsfdata.options.json
