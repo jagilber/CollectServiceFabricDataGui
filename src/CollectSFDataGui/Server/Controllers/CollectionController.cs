@@ -60,9 +60,9 @@ namespace CollectSFDataGui.Server.Controllers
             {
                 return CreateJsonResult(TaskStatus.Canceled.ToString());
             }
-            var jsonString = JsonSerializer.Serialize(_collector.Instance.Totals, JsonHelpers.GetJsonSerializerOptions());
-            _logger.LogInformation($"CollectionStatus:jsonString:{jsonString}");
-            return CreateJsonResult(jsonString);
+            // var jsonString = JsonSerializer.Serialize(_collector.Instance.Totals, JsonHelpers.GetJsonSerializerOptions());
+            // _logger.LogInformation($"CollectionStatus:jsonString:{jsonString}");
+            // return CreateJsonResult(jsonString);
 
         }
 
@@ -95,52 +95,22 @@ namespace CollectSFDataGui.Server.Controllers
                 return CreateJsonResult(success);
             }
         }
-
-        [HttpGet]
-        [Route("/api/collection/logMessages")]
-        public IEnumerable<LogMessage> GetLogMessages()
-        {
-            return new JsonResult(_logMessages) { }.Value as IEnumerable<LogMessage>;
-        }
-
-        [HttpGet]
-        [Route("/api/collection/logMessages/clear")]
-        public ActionResult ClearLogMessages()
-        {
-            _logMessages.Clear();
-            return new JsonResult(true) { };
-        }
-
-        [HttpGet]
-        [Route("/api/collection/logMessages/last")]
-        public ActionResult GetLastLogMessage()
-        {
-            if (_logMessages.Count > 0)
-            {
-                return new JsonResult(_logMessages.Last()) { };
-            }
-            else
-            {
-                return new JsonResult(new LogMessage()) { };
-            }
-        }
-
         private static JsonResult CreateJsonResult<T>(T value)
         {
-            _logger.LogInformation($"CreateJsonResult:enter");
+            string jsonString = JsonSerializer.Serialize(value, JsonHelpers.GetJsonSerializerOptions());
+            _logger.LogInformation($"CreateJsonResult:enter:jsonString:{jsonString}");
             JsonResult jsonResult = new JsonResult(value, JsonHelpers.GetJsonSerializerOptions()) { };
             jsonResult.ContentType = "application/json;charset=utf-8";
             return jsonResult;
         }
 
-
         private static void Log_MessageLogged(object sender, LogMessage args)
         {
             _logger.LogInformation($"CollectionController:CSFDMessage:{args.Message}");
-            if (args.IsError)
-            {
+//            if (args.IsError)
+//            {
                 _logMessages.Add(args);
-            }
+//            }
         }
     }
 }
