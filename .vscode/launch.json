@@ -29,7 +29,7 @@
             "type": "msedge",
             "request": "launch",
             "timeout": 30000,
-            "url": "http://localhost:5000/configuration",
+            "url": "http://localhost:59887/configuration",
             "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
             "webRoot": "${workspaceFolder}/src/CollectSFDataGui"
         },
