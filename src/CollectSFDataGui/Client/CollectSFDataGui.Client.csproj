@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <!-- <PlatformTarget>AnyCPU</PlatformTarget> -->
     <SelfContained>false</SelfContained>
     <RelativeIdentifier>win-x64</RelativeIdentifier>
@@ -12,17 +12,18 @@
 
   <ItemGroup>
     <!-- <PackageReference Include="Microsoft.ServiceFabric.CollectSFData" Version="2.9.2302.10517" /> -->
-    <PackageReference Include="Microsoft.ServiceFabric.CollectSFData" Version="2.9.2304.11613" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.15" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.15" PrivateAssets="all" />
-    <PackageReference Include="Radzen.Blazor" Version="4.8.0" />
-    <PackageReference Include="System.Net.Http.Json" Version="7.0.1" />
+    <PackageReference Include="Microsoft.ServiceFabric.CollectSFData" Version="3.0.2311.11918" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.0" PrivateAssets="all" />
+    <PackageReference Include="Radzen.Blazor" Version="4.21.3" />
+    <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
   </ItemGroup>
-
+  <ItemGroup>
+    <TrimmerRootAssembly Include="Microsoft.Authentication.WebAssembly.Msal" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Shared\CollectSFDataGui.Shared.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
   </ItemGroup>

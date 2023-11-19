@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Net.Http.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace CollectSFDataGui.Server.Controllers
 {
@@ -21,12 +22,13 @@ namespace CollectSFDataGui.Server.Controllers
 
         private static ConfigurationOptions _config;
         private static ILogger<ConfigurationController> _logger;
-        private static List<LogMessage> _logMessages;
+        //private static List<LogMessage> _logMessages;
+        private static List<string> _logMessages = MessageLogger.Messages;
 
         static ConfigurationController()
         {
             _collector = new Collector(false);
-            _logMessages = new List<LogMessage>();
+            //_logMessages = new List<LogMessage>();
             // to subscribe to log messages
             Log.MessageLogged += Log_MessageLogged;
             _config = _collector.Config;
@@ -42,10 +44,10 @@ namespace CollectSFDataGui.Server.Controllers
         public IEnumerable<JsonResult> Get()
         {
             ConfigurationOptions ConfigurationOptions = _config.Clone();
-            string jsonString = JsonSerializer.Serialize(ConfigurationOptions, JsonHelpers.GetJsonSerializerOptions());
+            string jsonString = JsonSerializer.Serialize(ConfigurationOptions);
 
             _logger.LogInformation($"Get:enter:jsonString:{jsonString}");
-            return new List<JsonResult>() { new JsonResult(new ConfigurationOptions()) }.AsEnumerable();
+            return new List<JsonResult>() { CreateJsonResult(new ConfigurationOptions()) }.AsEnumerable();
         }
 
         [HttpGet]
@@ -53,10 +55,10 @@ namespace CollectSFDataGui.Server.Controllers
         public ActionResult GetConfiguration()
         {
             ConfigurationOptions ConfigurationOptions = _config.Clone();
-            string jsonString = JsonSerializer.Serialize(ConfigurationOptions, JsonHelpers.GetJsonSerializerOptions());
+            string jsonString = JsonSerializer.Serialize(ConfigurationOptions);
             _logger.LogInformation($"Get:enter:jsonString:{jsonString}");
 
-            JsonResult jsonResult = new JsonResult(ConfigurationOptions, JsonHelpers.GetJsonSerializerOptions()){};
+            JsonResult jsonResult = CreateJsonResult(ConfigurationOptions);
             //jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet
             jsonResult.ContentType = "application/json;charset=utf-8";
 
@@ -68,10 +70,10 @@ namespace CollectSFDataGui.Server.Controllers
         public IEnumerable<string> GetOptionsConfiguration()
         {
             ConfigurationOptions configurationOptions = _config.Clone();
-            string jsonString = JsonSerializer.Serialize(configurationOptions, JsonHelpers.GetJsonSerializerOptions());
+            string jsonString = JsonSerializer.Serialize(configurationOptions);
             _logger.LogInformation($"Get:enter:jsonString:{jsonString}");
 
-            JsonResult jsonResult = new JsonResult(configurationOptions, JsonHelpers.GetJsonSerializerOptions());
+            JsonResult jsonResult = CreateJsonResult(configurationOptions);
             jsonResult.ContentType = "application/json;charset=utf-8";
 
             //return new List<JsonResult>() { jsonResult }.AsEnumerable();
@@ -86,7 +88,7 @@ namespace CollectSFDataGui.Server.Controllers
             string jsonString = JsonSerializer.Serialize(configurationProperties, JsonHelpers.GetJsonSerializerOptions());
             _logger.LogInformation($"Get:enter:jsonString:{jsonString}");
 
-            JsonResult jsonResult = new JsonResult(configurationProperties, JsonHelpers.GetJsonSerializerOptions());
+            JsonResult jsonResult = CreateJsonResult(configurationProperties);
             jsonResult.ContentType = "application/json;charset=utf-8";
 
             //return new List<JsonResult>() { jsonResult }.AsEnumerable();
@@ -100,7 +102,7 @@ namespace CollectSFDataGui.Server.Controllers
             string jsonString = _config.SaveConfigFile();
             _logger.LogInformation($"Save:enter:jsonString:{jsonString}");
 
-            JsonResult jsonResult = new JsonResult(jsonString, JsonHelpers.GetJsonSerializerOptions()){};
+            JsonResult jsonResult = CreateJsonResult(jsonString);
             //jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet
             jsonResult.ContentType = "application/json;charset=utf-8";
 
@@ -117,7 +119,7 @@ namespace CollectSFDataGui.Server.Controllers
                 bool validated = _config.Validate();
                 ConfigurationOptions newConfigurationOptions = _config.Clone();
 
-                JsonResult jsonResult = new JsonResult(newConfigurationOptions, JsonHelpers.GetJsonSerializerOptions());
+                JsonResult jsonResult = CreateJsonResult(newConfigurationOptions);
                 jsonResult.ContentType = "application/json;charset=utf-8";
                 string jsonString = JsonSerializer.Serialize(newConfigurationOptions, JsonHelpers.GetJsonSerializerOptions());
 
@@ -147,13 +149,61 @@ namespace CollectSFDataGui.Server.Controllers
             return new List<ConfigurationOptions>() { _config.Clone() }.AsEnumerable();
         }
 
+        [HttpGet]
+        [Route("/api/logMessages")]
+        public ActionResult GetLogMessages()
+        {
+            return CreateJsonResult(_logMessages.ToArray());
+        }
+
+        [HttpGet]
+        [Route("/api/logMessages/clear")]
+        public ActionResult ClearLogMessages()
+        {
+            _logMessages.Clear();
+            return CreateJsonResult(true);
+        }
+
+        [HttpGet]
+        [Route("/api/logMessages/last")]
+        public ActionResult GetLastLogMessage()
+        {
+            if (_logMessages.Count > 0)
+            {
+                return CreateJsonResult(_logMessages.Last());
+            }
+            else
+            {
+                return CreateJsonResult(new LogMessage());
+            }
+        }
+
+        private static string CreateJson<T>(T value)
+        {
+            string jsonString = JsonSerializer.Serialize(value, JsonHelpers.GetJsonSerializerOptions());
+            _logger.LogInformation($"CreateJson:returning jsonString:{jsonString}");
+            return jsonString;
+        }
+
+        private static JsonResult CreateJsonResult<T>(T value)
+        {
+            string jsonString = JsonSerializer.Serialize(value, JsonHelpers.GetJsonSerializerOptions());
+            _logger.LogInformation($"CreateJsonResult:enter:jsonString:{jsonString}");
+            JsonResult jsonResult = new JsonResult(value, JsonHelpers.GetJsonSerializerOptions()) { };
+            jsonResult.ContentType = "application/json;charset=utf-8";
+
+            _logger.LogInformation($"CreateJsonResult:exit:jsonResult:{jsonResult.ToString()}");
+            return jsonResult;
+        }
+
+
         private static void Log_MessageLogged(object sender, LogMessage args)
         {
             _logger.LogInformation($"ConfigurationController:CSFDMessage:{args.Message}");
-            if (args.IsError)
-            {
-                _logMessages.Add(args);
-            }
+            //if (args.IsError)
+            //{
+                _logMessages.Add(args.Message);
+            //}
         }
     }
 }

@@ -4,16 +4,18 @@
     <SelfContained>false</SelfContained>
     <RelativeIdentifier>win-x64</RelativeIdentifier>
     <PlatformTarget>x64</PlatformTarget>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <!-- <PackageReference Include="Microsoft.ServiceFabric.CollectSFData" Version="2.9.2302.10517" /> -->
-    <PackageReference Include="Microsoft.ServiceFabric.CollectSFData" Version="2.9.2304.11613" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.15" />
-    <PackageReference Include="System.Net.Http.Json" Version="7.0.1" />
+    <PackageReference Include="Microsoft.ServiceFabric.CollectSFData" Version="3.0.2311.11918" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.0" />
+    <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
   </ItemGroup>
-
+  <ItemGroup>
+    <TrimmerRootAssembly Include="Microsoft.Authentication.WebAssembly.Msal" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Client\CollectSFDataGui.Client.csproj" />
     <ProjectReference Include="..\Shared\CollectSFDataGui.Shared.csproj" />

@@ -69,8 +69,9 @@ a, .btn-link {
     display:flex;
     align-items: center;
     justify-content: center;
-    background-color: crimson; 
     height: var(--rz-input-height);
+    background-color: #1b6ec2;;  
+    /* height:inherit; */
 }
 
  /* // Remove styling applied when the user clicks the button  */
