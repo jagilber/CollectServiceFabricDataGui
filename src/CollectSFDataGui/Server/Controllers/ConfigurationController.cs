@@ -40,47 +40,6 @@ namespace CollectSFDataGui.Server.Controllers
         }
 
         [HttpGet]
-        [Route("/api")]
-        public IEnumerable<JsonResult> Get()
-        {
-            ConfigurationOptions ConfigurationOptions = _config.Clone();
-            string jsonString = JsonSerializer.Serialize(ConfigurationOptions);
-
-            _logger.LogInformation($"Get:enter:jsonString:{jsonString}");
-            return new List<JsonResult>() { CreateJsonResult(new ConfigurationOptions()) }.AsEnumerable();
-        }
-
-        [HttpGet]
-        [Route("/api/configurationJson")]
-        public ActionResult GetConfiguration()
-        {
-            ConfigurationOptions ConfigurationOptions = _config.Clone();
-            string jsonString = JsonSerializer.Serialize(ConfigurationOptions);
-            _logger.LogInformation($"Get:enter:jsonString:{jsonString}");
-
-            JsonResult jsonResult = CreateJsonResult(ConfigurationOptions);
-            //jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet
-            jsonResult.ContentType = "application/json;charset=utf-8";
-
-            return jsonResult;
-        }
-
-        [HttpGet]
-        [Route("/api/configurationOptions")]
-        public IEnumerable<string> GetOptionsConfiguration()
-        {
-            ConfigurationOptions configurationOptions = _config.Clone();
-            string jsonString = JsonSerializer.Serialize(configurationOptions);
-            _logger.LogInformation($"Get:enter:jsonString:{jsonString}");
-
-            JsonResult jsonResult = CreateJsonResult(configurationOptions);
-            jsonResult.ContentType = "application/json;charset=utf-8";
-
-            //return new List<JsonResult>() { jsonResult }.AsEnumerable();
-            return new List<string>() { jsonString }.AsEnumerable();
-        }
-
-        [HttpGet]
         [Route("/api/configuration")]
         public IEnumerable<string> GetPropertiesConfiguration()
         {
@@ -142,41 +101,6 @@ namespace CollectSFDataGui.Server.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("/api/index")]
-        public IEnumerable<ConfigurationOptions> Index()
-        {
-            return new List<ConfigurationOptions>() { _config.Clone() }.AsEnumerable();
-        }
-
-        [HttpGet]
-        [Route("/api/logMessages")]
-        public ActionResult GetLogMessages()
-        {
-            return CreateJsonResult(_logMessages.ToArray());
-        }
-
-        [HttpGet]
-        [Route("/api/logMessages/clear")]
-        public ActionResult ClearLogMessages()
-        {
-            _logMessages.Clear();
-            return CreateJsonResult(true);
-        }
-
-        [HttpGet]
-        [Route("/api/logMessages/last")]
-        public ActionResult GetLastLogMessage()
-        {
-            if (_logMessages.Count > 0)
-            {
-                return CreateJsonResult(_logMessages.Last());
-            }
-            else
-            {
-                return CreateJsonResult(new LogMessage());
-            }
-        }
 
         private static string CreateJson<T>(T value)
         {
