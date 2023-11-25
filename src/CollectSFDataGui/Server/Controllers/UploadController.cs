@@ -7,9 +7,17 @@ using System.IO;
 namespace CollectSFDataGui.Server.Controllers
 {
     [DisableRequestSizeLimit]
-    public partial class UploadController : Controller
+    [ApiController]
+    [Route("[controller]")]
+    [Produces("application/json")]
+    public class UploadController : ControllerBase
+
     {
         private readonly IWebHostEnvironment environment;
+
+        public UploadController()
+        {
+        }
 
         public UploadController(IWebHostEnvironment environment)
         {

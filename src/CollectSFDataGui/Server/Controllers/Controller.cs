@@ -51,36 +51,6 @@ namespace CollectSFDataGui.Server.Controllers
         }
 
         [HttpGet]
-        [Route("/api/configurationJson")]
-        public ActionResult GetConfiguration()
-        {
-            ConfigurationOptions ConfigurationOptions = _config.Clone();
-            string jsonString = JsonSerializer.Serialize(ConfigurationOptions);
-            _logger.LogInformation($"Get:enter:jsonString:{jsonString}");
-
-            JsonResult jsonResult = CreateJsonResult(ConfigurationOptions);
-            //jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet
-            jsonResult.ContentType = "application/json;charset=utf-8";
-
-            return jsonResult;
-        }
-
-        [HttpGet]
-        [Route("/api/configurationOptions")]
-        public IEnumerable<string> GetOptionsConfiguration()
-        {
-            ConfigurationOptions configurationOptions = _config.Clone();
-            string jsonString = JsonSerializer.Serialize(configurationOptions);
-            _logger.LogInformation($"Get:enter:jsonString:{jsonString}");
-
-            JsonResult jsonResult = CreateJsonResult(configurationOptions);
-            jsonResult.ContentType = "application/json;charset=utf-8";
-
-            //return new List<JsonResult>() { jsonResult }.AsEnumerable();
-            return new List<string>() { jsonString }.AsEnumerable();
-        }
-
-        [HttpGet]
         [Route("/api/index")]
         public IEnumerable<ConfigurationOptions> Index()
         {
