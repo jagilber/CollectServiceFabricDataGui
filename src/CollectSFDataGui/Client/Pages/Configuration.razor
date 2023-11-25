@@ -15,6 +15,7 @@
 @inject NavigationManager navigationManager
 @inject ILogger<Configuration> logger
 @inject IJSRuntime JS
+@inject NotificationService notificationService
 
 <style>
     form .row {
@@ -537,6 +538,7 @@ else
     string _configurationStatusIcon = "info";
     IconStyle _configurationStatusIconStyle = IconStyle.Info;
     const string _defaultConfigurationFile = "collectsfdata.options.json";
+    List<NotificationMessage> _queuedNotifications = new List<NotificationMessage>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -580,7 +582,7 @@ else
 
     async Task GetCurrentConfig()
     {
-        _config = await Http.GetFromJsonAsync<ConfigurationProperties>("api/configurationJson",
+        _config = await Http.GetFromJsonAsync<ConfigurationProperties>("api/configuration/json",
             JsonHelpers.GetJsonSerializerOptions());
         ConsoleLog($"GetCurrentConfig():Server response:", _config);
     }
@@ -669,10 +671,18 @@ else
         else
         {
             ConsoleLog($"ERROR:{response.StatusCode}");
+            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = jsonString });
             _configurationStatusIcon = "error";
             _configurationStatusIconStyle = IconStyle.Danger;
         }
 
         await RefreshData();
+    }
+
+    async void ShowNotification(NotificationMessage message)
+    {
+        notificationService.Notify(message);
+        _queuedNotifications.Add(message);
+        await InvokeAsync(() => { StateHasChanged(); });
     }
 }

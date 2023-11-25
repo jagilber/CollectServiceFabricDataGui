@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Radzen;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -17,7 +18,8 @@ namespace CollectSFDataGui.Client
             builder.RootComponents.Add<HeadOutlet>("head::after");
             builder.Logging.SetMinimumLevel(LogLevel.Debug);
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddScoped<Radzen.DialogService>();
+            builder.Services.AddScoped<DialogService>();
+            builder.Services.AddScoped<NotificationService>();
             await builder.Build().RunAsync();
         }
     }
