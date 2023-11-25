@@ -78,33 +78,40 @@ namespace CollectSFDataGui.Server.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("/api/collection/start")]
-        public ActionResult StartCollection()
+        [HttpPost("/api/collection/start")]
+        public ActionResult StartCollection([FromBody] object properties = null)
         {
+
             bool success = true;
             try
             {
                 _logger.LogInformation($"StartCollection:enter");
+                // _collector = new Collector(false);
+                // _logMessages = new List<string>();
+                // // to subscribe to log messages
+                // Log.MessageLogged += Log_MessageLogged;
+                // _config = _collector.Config;
+
+
                 // get current confguration from configuration controller
-                var logger = default(ILogger<ConfigurationController>);
-                ConfigurationController configurationController = new ConfigurationController(logger);
+                //var logger = default(ILogger<ConfigurationController>);
+                //ConfigurationController configurationController = new ConfigurationController(logger);
+                ConfigurationController configurationController = new ConfigurationController();
                 ActionResult configurationActionResult = configurationController.GetConfiguration();
                 JsonResult configurationJsonResult = (JsonResult)configurationActionResult;
-                ConfigurationOptions configurationOptions = (ConfigurationOptions)configurationJsonResult.Value;
-                _logger.LogInformation($"StartCollection:configurationOptions:{configurationOptions}");
+                ConfigurationOptions configOptions = (ConfigurationOptions)configurationJsonResult.Value;
+                _logger.LogInformation($"StartCollection:configurationOptions:{configOptions}");
                 //_collector = new Collector(false);
-                _task = new Task(() => _collector.Collect(configurationOptions));
+                _task = new Task(() => _collector.Collect(configOptions));
                 _task.Start();
 
                 return CreateJsonResult(success);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"StartCollection:exception:{ex.Message}");
-                success = false;
-
-                return CreateJsonResult(success);
+                string errorMessage = $"StartCollection:exception:{ex.Message}";
+                _logger.LogError(errorMessage);
+                return CreateJsonResult(errorMessage);
             }
         }
         private static JsonResult CreateJsonResult<T>(T value)

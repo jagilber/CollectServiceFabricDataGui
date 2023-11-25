@@ -15,6 +15,7 @@
 @inject NavigationManager navigationManager
 @inject ILogger<Configuration> logger
 @inject IJSRuntime JS
+@inject NotificationService notificationService
 
 <style>
     form .row {
@@ -60,10 +61,6 @@ else
                         </div>
                     </div>
                 </RadzenFieldset>
-                <RadzenFieldset Text="Collector Logs">
-                    @* todo *@
-                    <LogConsole @ref=@_logConsole />
-                </RadzenFieldset>
                 <RadzenFieldset Text="Operations">
                     <div class="row justify-content-left">
                         <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Light" Icon="cancel"
@@ -77,6 +74,10 @@ else
             </div>
         </div>
     </RadzenTemplateForm>
+    <RadzenFieldset Text="Collector Logs">
+        @* todo *@
+        <LogConsole @ref=@_logConsole />
+    </RadzenFieldset>
 
     <EventConsole @ref=@_console />
 }
@@ -89,6 +90,7 @@ else
     LogConsole _logConsole;
     List<string> _queuedConsoleMessages = new List<string>();
     List<string> _queuedLogConsoleMessages = new List<string>();
+    List<NotificationMessage> _queuedNotifications = new List<NotificationMessage>();
     const string _defaultConfigurationFile = "collectsfdata.options.json";
 
     protected override async Task OnInitializedAsync()
@@ -117,11 +119,13 @@ else
     {
         string[] messages = await Http.GetFromJsonAsync<string[]>("api/collection/messages",
         JsonHelpers.GetJsonSerializerOptions());
-        if(messages != null){
+        if (messages != null)
+        {
             await ClearMessages();
         }
-       // ConsoleLog($"CheckStatus():Server response:", messages);
-        foreach(string message in messages){
+        // ConsoleLog($"CheckStatus():Server response:", messages);
+        foreach (string message in messages)
+        {
             LogConsoleLog(message);
         }
         return messages;
@@ -137,6 +141,7 @@ else
 
     async Task<bool> ClearMessages()
     {
+        //_queuedLogConsoleMessages.Clear();
         return await Http.GetFromJsonAsync<bool>("api/collection/messages/clear");
     }
 
@@ -153,10 +158,7 @@ else
 
         if (_console != null)
         {
-            foreach (string queuedMessage in _queuedConsoleMessages)
-            {
-                _console.Log(queuedMessage);
-            }
+            _console.Log(message);
         }
     }
 
@@ -167,25 +169,16 @@ else
         ConsoleLog($"GetCurrentConfig():Server response:", _config);
     }
 
-    void LogConsoleLog(string message, object jsonObject = null)
+    void LogConsoleLog(string message)
     {
-        if (jsonObject != null)
-        {
-            StringBuilder sb = new StringBuilder(message);
-            sb.AppendLine(JsonSerializer.Serialize(_config, new JsonSerializerOptions { WriteIndented = true }));
-            message = sb.ToString();
-        }
-
         _queuedLogConsoleMessages.Add(message);
 
         if (_logConsole != null)
         {
-            foreach (string queuedMessage in _queuedLogConsoleMessages)
-            {
-                _logConsole.Log(queuedMessage);
-            }
+            _logConsole.Log(message);
         }
     }
+
     void OnKeyPress(string value, Radzen.DialogService sender)
     {
         //Enter
@@ -212,7 +205,7 @@ else
 
     public async Task ResultData()
     {
-       // _config = null;
+        // _config = null;
         await CheckStatus();
         await CheckMessages();
         await InvokeAsync(() => { StateHasChanged(); });
@@ -239,6 +232,13 @@ else
         await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
     }
 
+    async void ShowNotification(NotificationMessage message)
+    {
+        notificationService.Notify(message);
+        _queuedNotifications.Add(message);
+        await InvokeAsync(() => { StateHasChanged(); });
+    }
+
     void Submit(ConfigurationProperties arg)
     {
         StartCollection();
@@ -248,7 +248,6 @@ else
     {
         HttpResponseMessage response = new HttpResponseMessage();
         response = await Http.PostAsJsonAsync("api/collection/start", uploadedJson, JsonHelpers.GetJsonSerializerOptions());
-
         string jsonString = await response.Content.ReadAsStringAsync();
         ConsoleLog($"StartCollection:responseString:{jsonString}");
         jsonString = jsonString.Replace("\"{", "{").Replace("}\"", "}").Replace("\\\"", "\"");
@@ -262,9 +261,24 @@ else
         }
         else
         {
-            ConsoleLog($"ERROR:{response.StatusCode}");
+            ConsoleLog($"ERROR:{response.StatusCode}", response);
+            ShowNotification(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail =
+                $"Error:{response.StatusCode}:{response.ReasonPhrase}:{await response.Content.ReadAsStringAsync()}"
+                });
             //await GetCurrentConfig();
         }
         await ResultData();
     }
+    string CreateJson<T>(T value)
+    {
+        string jsonString = JsonSerializer.Serialize(value, JsonHelpers.GetJsonSerializerOptions());
+        ConsoleLog($"CreateJsonResult:enter:jsonString:{jsonString}");
+
+        return jsonString;
+    }
+
 }

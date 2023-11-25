@@ -33,10 +33,12 @@ namespace CollectSFDataGui.Server.Controllers
             Log.MessageLogged += Log_MessageLogged;
             _config = _collector.Config;
         }
-
-        public ConfigurationController(ILogger<ConfigurationController> logger)
+        public ConfigurationController(ILogger<ConfigurationController> logger = null)
         {
-            _logger = logger;
+            if (logger != null)
+            {
+                _logger = logger;
+            }
         }
 
         [HttpGet]
@@ -155,7 +157,7 @@ namespace CollectSFDataGui.Server.Controllers
             _logger.LogInformation($"ConfigurationController:CSFDMessage:{args.Message}");
             //if (args.IsError)
             //{
-                _logMessages.Add(args.Message);
+            _logMessages.Add(args.Message);
             //}
         }
     }
