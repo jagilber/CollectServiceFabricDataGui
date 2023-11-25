@@ -22,12 +22,12 @@ namespace CollectSFDataGui.Server.Controllers
 
         private static ConfigurationOptions _config;
         private static ILogger<CollectionController> _logger;
-        private static List<LogMessage> _logMessages;
+        private static List<string> _logMessages;
         private static Task _task;
         static CollectionController()
         {
             _collector = new Collector(false);
-            _logMessages = new List<LogMessage>();
+            _logMessages = new List<string>();
             // to subscribe to log messages
             Log.MessageLogged += Log_MessageLogged;
             _config = _collector.Config;
@@ -52,6 +52,15 @@ namespace CollectSFDataGui.Server.Controllers
         public ActionResult CollectionMessages()
         {
             return CreateJsonResult(_logMessages.ToArray());
+        }
+
+        [HttpGet]
+        [Route("/api/collection/messages/clear")]
+        public ActionResult ClearMessages()
+        {
+            // todo: cancel collection
+            _logMessages.Clear();
+            return new JsonResult(true) { };
         }
 
         [HttpGet]
@@ -112,7 +121,7 @@ namespace CollectSFDataGui.Server.Controllers
             _logger.LogInformation($"CollectionController:CSFDMessage:{args.Message}");
             //            if (args.IsError)
             //            {
-            _logMessages.Add(args);
+            _logMessages.Add(args.TimeStamp + args.Message);
             //            }
         }
     }

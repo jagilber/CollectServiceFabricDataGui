@@ -60,9 +60,9 @@ else
                         </div>
                     </div>
                 </RadzenFieldset>
-                <RadzenFieldset Text="Collection Log">
+                <RadzenFieldset Text="Collector Logs">
                     @* todo *@
-                    <EventConsole @ref=@_logConsole />
+                    <LogConsole @ref=@_logConsole />
                 </RadzenFieldset>
                 <RadzenFieldset Text="Operations">
                     <div class="row justify-content-left">
@@ -86,7 +86,7 @@ else
     ConfigurationProperties _config { get; set; }
     ConfigurationProperties _tempConfig { get; set; }
     EventConsole _console;
-    EventConsole _logConsole;
+    LogConsole _logConsole;
     List<string> _queuedConsoleMessages = new List<string>();
     List<string> _queuedLogConsoleMessages = new List<string>();
     const string _defaultConfigurationFile = "collectsfdata.options.json";
@@ -104,6 +104,8 @@ else
         {
             _config.SaveConfiguration = _defaultConfigurationFile;
         }
+
+        _logConsole = new LogConsole();
     }
 
     void Cancel()
@@ -111,20 +113,31 @@ else
         Http.CancelPendingRequests();
     }
 
-    async Task<string> CheckMessages()
+    async Task<string[]> CheckMessages()
     {
-        string status = await Http.GetFromJsonAsync<string>("api/messages",
+        string[] messages = await Http.GetFromJsonAsync<string[]>("api/collection/messages",
+        JsonHelpers.GetJsonSerializerOptions());
+        if(messages != null){
+            await ClearMessages();
+        }
+       // ConsoleLog($"CheckStatus():Server response:", messages);
+        foreach(string message in messages){
+            LogConsoleLog(message);
+        }
+        return messages;
+    }
+
+    async Task<string> CheckStatus()
+    {
+        string status = await Http.GetFromJsonAsync<string>("api/collection/status",
         JsonHelpers.GetJsonSerializerOptions());
         ConsoleLog($"CheckStatus():Server response:", status);
         return status;
     }
 
-    async Task<string> CheckStatus()
+    async Task<bool> ClearMessages()
     {
-        string status = await Http.GetFromJsonAsync<string>("api/status",
-        JsonHelpers.GetJsonSerializerOptions());
-        ConsoleLog($"CheckStatus():Server response:", status);
-        return status;
+        return await Http.GetFromJsonAsync<bool>("api/collection/messages/clear");
     }
 
     void ConsoleLog(string message, object jsonObject = null)
@@ -149,7 +162,7 @@ else
 
     async Task GetCurrentConfig()
     {
-        _config = await Http.GetFromJsonAsync<ConfigurationProperties>("api/configurationJson",
+        _config = await Http.GetFromJsonAsync<ConfigurationProperties>("api/configuration/json",
         JsonHelpers.GetJsonSerializerOptions());
         ConsoleLog($"GetCurrentConfig():Server response:", _config);
     }
@@ -199,10 +212,10 @@ else
 
     public async Task ResultData()
     {
-        _config = null;
+       // _config = null;
         await CheckStatus();
         await CheckMessages();
-        StateHasChanged();
+        await InvokeAsync(() => { StateHasChanged(); });
     }
 
 

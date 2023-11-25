@@ -537,7 +537,7 @@ else
 
     async Task GetCurrentConfig()
     {
-        config = await Http.GetFromJsonAsync<ConfigurationProperties>("api/configurationJson", JsonHelpers.GetJsonSerializerOptions());
+        config = await Http.GetFromJsonAsync<ConfigurationProperties>("api/configuration/json", JsonHelpers.GetJsonSerializerOptions());
         ConsoleLog($"GetCurrentConfig():Server response:", config);
     }
 
