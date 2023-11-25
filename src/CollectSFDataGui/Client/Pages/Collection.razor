@@ -111,6 +111,22 @@ else
         Http.CancelPendingRequests();
     }
 
+    async Task<string> CheckMessages()
+    {
+        string status = await Http.GetFromJsonAsync<string>("api/messages",
+        JsonHelpers.GetJsonSerializerOptions());
+        ConsoleLog($"CheckStatus():Server response:", status);
+        return status;
+    }
+
+    async Task<string> CheckStatus()
+    {
+        string status = await Http.GetFromJsonAsync<string>("api/status",
+        JsonHelpers.GetJsonSerializerOptions());
+        ConsoleLog($"CheckStatus():Server response:", status);
+        return status;
+    }
+
     void ConsoleLog(string message, object jsonObject = null)
     {
         if (jsonObject != null)
@@ -181,10 +197,11 @@ else
         StartCollection(jsonString);
     }
 
-    public async Task RefreshData()
+    public async Task ResultData()
     {
         _config = null;
-        await GetCurrentConfig();
+        await CheckStatus();
+        await CheckMessages();
         StateHasChanged();
     }
 
@@ -235,6 +252,6 @@ else
             ConsoleLog($"ERROR:{response.StatusCode}");
             //await GetCurrentConfig();
         }
-        await RefreshData();
+        await ResultData();
     }
 }

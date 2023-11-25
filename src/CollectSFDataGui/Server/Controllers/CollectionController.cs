@@ -48,6 +48,13 @@ namespace CollectSFDataGui.Server.Controllers
         }
 
         [HttpGet]
+        [Route("/api/collection/messages")]
+        public ActionResult CollectionMessages()
+        {
+            return CreateJsonResult(_logMessages.ToArray());
+        }
+
+        [HttpGet]
         [Route("/api/collection/status")]
         public ActionResult CollectionStatus()
         {
@@ -60,10 +67,6 @@ namespace CollectSFDataGui.Server.Controllers
             {
                 return CreateJsonResult(TaskStatus.Canceled.ToString());
             }
-            // var jsonString = JsonSerializer.Serialize(_collector.Instance.Totals, JsonHelpers.GetJsonSerializerOptions());
-            // _logger.LogInformation($"CollectionStatus:jsonString:{jsonString}");
-            // return CreateJsonResult(jsonString);
-
         }
 
         [HttpGet]
@@ -107,10 +110,10 @@ namespace CollectSFDataGui.Server.Controllers
         private static void Log_MessageLogged(object sender, LogMessage args)
         {
             _logger.LogInformation($"CollectionController:CSFDMessage:{args.Message}");
-//            if (args.IsError)
-//            {
-                _logMessages.Add(args);
-//            }
+            //            if (args.IsError)
+            //            {
+            _logMessages.Add(args);
+            //            }
         }
     }
 }
