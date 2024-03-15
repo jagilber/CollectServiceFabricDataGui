@@ -23,17 +23,7 @@ else
     public RenderFragment ChildContent { get; set; }
 
     [Parameter]
-    public bool Expanded
-    {
-        get
-        {
-            return SideBarPage.Expanded;
-        }
-        set
-        {
-            SideBarPage.Expanded = value;
-        }
-    }
+    public bool Expanded { get; set; }
 
     [Parameter]
     public EventCallback<bool> ExpandedChanged { get; set; }

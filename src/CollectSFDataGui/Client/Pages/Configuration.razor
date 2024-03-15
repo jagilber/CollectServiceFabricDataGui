@@ -298,8 +298,8 @@ else
                                         <RadzenLabel Text="Storage Account" />
                                     </div>
                                     <div class="col-md-9">
-                                        <RadzenTextBox Value=@_config.SasEndpointInfo.StorageAccountName style="width: 100%;"
-                                            Disabled="true" ReadOnly="true" />
+                                        <RadzenTextBox Value=@_config.SasEndpointInfo.StorageAccountName
+                                            style="width: 100%;" Disabled="true" ReadOnly="true" />
                                     </div>
                                 </div>
                                 <div class="row">
@@ -352,8 +352,8 @@ else
                                         <RadzenLabel Text="Azure Client Id" />
                                     </div>
                                     <div class="col-md-9">
-                                        <RadzenTextBox @bind-Value=@_config.AzureClientId Placeholder="enter azure client id"
-                                            style="width: 100%;" />
+                                        <RadzenTextBox @bind-Value=@_config.AzureClientId
+                                            Placeholder="enter azure client id" style="width: 100%;" />
                                     </div>
                                 </div>
                                 <div class="row">
@@ -388,8 +388,8 @@ else
                                         <RadzenLabel Text="Azure Tenant Id" />
                                     </div>
                                     <div class="col-md-9">
-                                        <RadzenTextBox @bind-Value=@_config.AzureTenantId Placeholder="enter azure tenant id"
-                                            style="width: 100%;" />
+                                        <RadzenTextBox @bind-Value=@_config.AzureTenantId
+                                            Placeholder="enter azure tenant id" style="width: 100%;" />
                                     </div>
                                 </div>
                                 <div class="row">
@@ -543,7 +543,7 @@ else
     protected override async Task OnInitializedAsync()
     {
 #if DEBUG
-    //await Task.Delay(10000);
+//await Task.Delay(10000);
 #endif
 
         GatherTypes = Enum.GetNames(typeof(CollectSFData.DataFile.FileTypesEnum)).ToList();
@@ -583,7 +583,7 @@ else
     async Task GetCurrentConfig()
     {
         _config = await Http.GetFromJsonAsync<ConfigurationProperties>("api/configuration/json",
-            JsonHelpers.GetJsonSerializerOptions());
+        JsonHelpers.GetJsonSerializerOptions());
         ConsoleLog($"GetCurrentConfig():Server response:", _config);
     }
 
@@ -671,7 +671,12 @@ else
         else
         {
             ConsoleLog($"ERROR:{response.StatusCode}");
-            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = jsonString });
+            ShowNotification(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = jsonString
+                });
             _configurationStatusIcon = "error";
             _configurationStatusIconStyle = IconStyle.Danger;
         }

@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <SelfContained>false</SelfContained>
     <RelativeIdentifier>win-x64</RelativeIdentifier>
-    <!-- <PlatformTarget>AnyCPU</PlatformTarget> -->
     <PlatformTarget>x64</PlatformTarget>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
