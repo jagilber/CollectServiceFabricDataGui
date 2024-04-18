@@ -81,8 +81,8 @@ else
     <RadzenTemplateForm TItem="Total" Data=@_total>
         <RadzenFieldset Text="Collection Counters">
             <div class="row">
-                <RadzenColumn>
-                    <div class="col-md-6">
+                <RadzenColumn Style="float: none; text-align: right">
+                    <div class="col-md-20">
                         @* <div class="row">
                     <div class="col-md-4 align-items-center d-flex">
                     <RadzenLabel Text="Gather Type" />
@@ -91,21 +91,21 @@ else
                     </div>
                     </div> *@
                         <div class="row">
-                            <div class="col-md-4 align-items-center d-flex">
+                            <div class="col-md-6 align-items-center d-flex">
                                 <RadzenLabel Text="Discovered Start Time Stamp" />
+                            </div>
+                            <div class="col-md-6">
                                 <RadzenTextBox Placeholder="min" @bind-Value:get=@DiscoveredMinDateTime style="width: 100%;"
                                     Name="DiscoveredMinDate" ReadOnly="true" />
                             </div>
-                            <div class="col-md-8">
-                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 align-items-center d-flex">
+                            <div class="col-md-6 align-items-center d-flex">
                                 <RadzenLabel Text="Discovered End Time Stamp" />
+                            </div>
+                            <div class="col-md-6">
                                 <RadzenTextBox Placeholder="max" @bind-Value:get=@DiscoveredMaxDateTime style="width: 100%;"
                                     Name="DiscoveredMaxDate" ReadOnly="true" />
-                            </div>
-                            <div class="col-md-8">
                             </div>
                         </div>
                         @* <div class="row">
@@ -118,143 +118,143 @@ else
                     </div>
                     </div> *@
                         <div class="row">
-                            <div class="col-md-4 align-items-center d-flex">
+                            <div class="col-md-6 align-items-center d-flex">
                                 <RadzenLabel Text="Errors" />
+                            </div>
+                            <div class="col-md-6">
                                 <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Errors
                                     style="width: 100%;" Name="Errors" ReadOnly="true" />
                             </div>
-                            <div class="col-md-8">
-                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 align-items-center d-flex">
+                            <div class="col-md-6 align-items-center d-flex">
                                 <RadzenLabel Text="Failed" />
+                            </div>
+                            <div class="col-md-6">
                                 <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Failed
                                     style="width: 100%;" Name="Failed" ReadOnly="true" />
                             </div>
-                            <div class="col-md-8">
-                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 align-items-center d-flex">
+                            <div class="col-md-6 align-items-center d-flex">
                                 <RadzenLabel Text="Converted" />
+                            </div>
+                            <div class="col-md-6">
                                 <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Converted
                                     style="width: 100%;" Name="Converted" ReadOnly="true" />
                             </div>
-                            <div class="col-md-8">
-                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 align-items-center d-flex">
+                            <div class="col-md-6 align-items-center d-flex">
                                 <RadzenLabel Text="Downloaded" />
+                            </div>
+                            <div class="col-md-6">
                                 <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Downloaded
                                     style="width: 100%;" Name="Downloaded" ReadOnly="true" />
                             </div>
-                            <div class="col-md-8">
-                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 align-items-center d-flex">
+                            <div class="col-md-6 align-items-center d-flex">
                                 <RadzenLabel Text="Downloading" />
+                            </div>
+                            <div class="col-md-6">
                                 <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Downloading
                                     style="width: 100%;" Name="Downloading" ReadOnly="true" />
                             </div>
-                            <div class="col-md-8">
-                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 align-items-center d-flex">
+                            <div class="col-md-6 align-items-center d-flex">
                                 <RadzenLabel Text="Enumerated" />
+                            </div>
+                            <div class="col-md-6">
                                 <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Enumerated
                                     style="width: 100%;" Name="Enumerated" ReadOnly="true" />
                             </div>
-                            <div class="col-md-8">
-                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 align-items-center d-flex">
+                            <div class="col-md-6 align-items-center d-flex">
                                 <RadzenLabel Text="Formatted" />
+                            </div>
+                            <div class="col-md-6">
                                 <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Formatted
                                     style="width: 100%;" Name="Formatted" ReadOnly="true" />
-                            </div>
-                            <div class="col-md-8">
                             </div>
                         </div>
                     </div>
                 </RadzenColumn>
                 <RadzenColumn>
                     <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
+                        <div class="col-md-6 align-items-center d-flex">
                             <RadzenLabel Text="Formatting" />
+                        </div>
+                        <div class="col-md-6">
                             <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Formatting
                                 style="width: 100%;" Name="Formatting" ReadOnly="true" />
                         </div>
-                        <div class="col-md-8">
-                        </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
+                        <div class="col-md-6 align-items-center d-flex">
                             <RadzenLabel Text="Matched" />
+                        </div>
+                        <div class="col-md-6">
                             <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Matched
                                 style="width: 100%;" Name="Matched" ReadOnly="true" />
-                        </div>
-                        <div class="col-md-8">
                         </div>
                     </div>
                     @* </div> *@
                     <div class="col-md-6">
                         <div class="row">
-                            <div class="col-md-4 align-items-center d-flex">
+                            <div class="col-md-6 align-items-center d-flex">
                                 <RadzenLabel Text="Queued" />
+                            </div>
+                            <div class="col-md-6">
                                 <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Queued
                                     style="width: 100%;" Name="Queued" ReadOnly="true" />
                             </div>
-                            <div class="col-md-8">
-                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 align-items-center d-flex">
+                            <div class="col-md-6 align-items-center d-flex">
                                 <RadzenLabel Text="Records" />
+                            </div>
+                            <div class="col-md-6">
                                 <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Records
                                     style="width: 100%;" Name="Records" ReadOnly="true" />
                             </div>
-                            <div class="col-md-8">
-                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 align-items-center d-flex">
+                            <div class="col-md-6 align-items-center d-flex">
                                 <RadzenLabel Text="Skipped" />
+                            </div>
+                            <div class="col-md-6">
                                 <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Skipped
                                     style="width: 100%;" Name="Skipped" ReadOnly="true" />
                             </div>
-                            <div class="col-md-8">
-                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 align-items-center d-flex">
+                            <div class="col-md-6 align-items-center d-flex">
                                 <RadzenLabel Text="Succeeded" />
+                            </div>
+                            <div class="col-md-6">
                                 <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Succeeded
                                     style="width: 100%;" Name="Succeeded" ReadOnly="true" />
                             </div>
-                            <div class="col-md-8">
-                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 align-items-center d-flex">
+                            <div class="col-md-6 align-items-center d-flex">
                                 <RadzenLabel Text="Unknown" />
+                            </div>
+                            <div class="col-md-6">
                                 <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Unknown
                                     style="width: 100%;" Name="Unknown" ReadOnly="true" />
                             </div>
-                            <div class="col-md-8">
-                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 align-items-center d-flex">
+                            <div class="col-md-6 align-items-center d-flex">
                                 <RadzenLabel Text="Uploading" />
+                            </div>
+                            <div class="col-md-6">
                                 <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Uploading
                                     style="width: 100%;" Name="Uploading" ReadOnly="true" />
-                            </div>
-                            <div class="col-md-8">
                             </div>
                         </div>
                     </div>
