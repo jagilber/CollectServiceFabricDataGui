@@ -1,4 +1,4 @@
 {
     "dotnet-test-explorer.testProjectPath": "**/*Test.csproj",
-    "audioCues.volume": 0
+    "accessibility.signals.sounds.volume": 0
 }

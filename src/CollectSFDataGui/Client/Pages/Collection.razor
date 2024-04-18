@@ -51,7 +51,8 @@ else
                             <RadzenLabel Text="Start Time Stamp" />
                         </div>
                         <div class="col-md-8">
-                            <RadzenDatePicker style="width: 100%;" Name="StartDate" @bind-Value:get=@_config.StartTimeUtc />
+                            <RadzenDatePicker style="width: 100%;" TValue="DateTimeOffset" Name="StartDate"
+                                @bind-Value:get=@_config.StartTimeUtc />
                         </div>
                     </div>
                     <div class="row">
@@ -59,7 +60,8 @@ else
                             <RadzenLabel Text="End Time Stamp" />
                         </div>
                         <div class="col-md-8">
-                            <RadzenDatePicker style="width: 100%;" Name="EndDate" @bind-Value:get=@_config.EndTimeUtc />
+                            <RadzenDatePicker style="width: 100%;" TValue="DateTimeOffset" Name="EndDate"
+                                @bind-Value:get=@_config.EndTimeUtc />
                         </div>
                     </div>
                 </RadzenFieldset>
@@ -76,96 +78,107 @@ else
             </div>
         </div>
     </RadzenTemplateForm>
-    <RadzenTemplateForm TItem="Total" Data=@_total >
+    <RadzenTemplateForm TItem="Total" Data=@_total>
         <RadzenFieldset Text="Collection Counters">
             <div class="row">
                 <RadzenColumn>
-                <div class="col-md-6">
-                    @* <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
-                            <RadzenLabel Text="Gather Type" />
-                        </div>
-                        <div class="col-md-8">
-                        </div>
+                    <div class="col-md-6">
+                        @* <div class="row">
+                    <div class="col-md-4 align-items-center d-flex">
+                    <RadzenLabel Text="Gather Type" />
+                    </div>
+                    <div class="col-md-8">
+                    </div>
                     </div> *@
-                    <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
-                            <RadzenLabel Text="Discovered Start Time Stamp"/>
-                            <RadzenTextBox Placeholder="min" @bind-Value:get=@DiscoveredMinDateTime style="width: 100%;" Name="DiscoveredMinDate" ReadOnly="true" />
+                        <div class="row">
+                            <div class="col-md-4 align-items-center d-flex">
+                                <RadzenLabel Text="Discovered Start Time Stamp" />
+                                <RadzenTextBox Placeholder="min" @bind-Value:get=@DiscoveredMinDateTime style="width: 100%;"
+                                    Name="DiscoveredMinDate" ReadOnly="true" />
+                            </div>
+                            <div class="col-md-8">
+                            </div>
                         </div>
-                        <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-4 align-items-center d-flex">
+                                <RadzenLabel Text="Discovered End Time Stamp" />
+                                <RadzenTextBox Placeholder="max" @bind-Value:get=@DiscoveredMaxDateTime style="width: 100%;"
+                                    Name="DiscoveredMaxDate" ReadOnly="true" />
+                            </div>
+                            <div class="col-md-8">
+                            </div>
                         </div>
+                        @* <div class="row">
+                    <div class="col-md-4 align-items-center d-flex">
+                    <RadzenLabel Text="Timed Out" />
+                    <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@TimedOut style="width: 100%;"
+                    Name="TimedOut" ReadOnly="true"/>
                     </div>
-                    <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
-                            <RadzenLabel Text="Discovered End Time Stamp" />
-                            <RadzenTextBox Placeholder="max" @bind-Value:get=@DiscoveredMaxDateTime style="width: 100%;" Name="DiscoveredMaxDate" ReadOnly="true"/>
-                        </div>
-                        <div class="col-md-8">
-                        </div>
+                    <div class="col-md-8">
                     </div>
-                    @* <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
-                            <RadzenLabel Text="Timed Out" />
-                            <RadzenNumeric  ShowUpDown="false" TValue="int" @bind-Value:get=@TimedOut style="width: 100%;" Name="TimedOut" ReadOnly="true"/>
-                        </div>
-                        <div class="col-md-8">
-                        </div>
                     </div> *@
-                    <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
-                            <RadzenLabel Text="Errors" />
-                            <RadzenNumeric  ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Errors style="width: 100%;" Name="Errors" ReadOnly="true"/>
+                        <div class="row">
+                            <div class="col-md-4 align-items-center d-flex">
+                                <RadzenLabel Text="Errors" />
+                                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Errors
+                                    style="width: 100%;" Name="Errors" ReadOnly="true" />
+                            </div>
+                            <div class="col-md-8">
+                            </div>
                         </div>
-                        <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-4 align-items-center d-flex">
+                                <RadzenLabel Text="Failed" />
+                                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Failed
+                                    style="width: 100%;" Name="Failed" ReadOnly="true" />
+                            </div>
+                            <div class="col-md-8">
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
-                            <RadzenLabel Text="Failed" />
-                            <RadzenNumeric  ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Failed style="width: 100%;" Name="Failed" ReadOnly="true"/>
+                        <div class="row">
+                            <div class="col-md-4 align-items-center d-flex">
+                                <RadzenLabel Text="Converted" />
+                                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Converted
+                                    style="width: 100%;" Name="Converted" ReadOnly="true" />
+                            </div>
+                            <div class="col-md-8">
+                            </div>
                         </div>
-                        <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-4 align-items-center d-flex">
+                                <RadzenLabel Text="Downloaded" />
+                                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Downloaded
+                                    style="width: 100%;" Name="Downloaded" ReadOnly="true" />
+                            </div>
+                            <div class="col-md-8">
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
-                            <RadzenLabel Text="Converted" />
-                            <RadzenNumeric  ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Converted style="width: 100%;" Name="Converted" ReadOnly="true"/>
+                        <div class="row">
+                            <div class="col-md-4 align-items-center d-flex">
+                                <RadzenLabel Text="Downloading" />
+                                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Downloading
+                                    style="width: 100%;" Name="Downloading" ReadOnly="true" />
+                            </div>
+                            <div class="col-md-8">
+                            </div>
                         </div>
-                        <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-4 align-items-center d-flex">
+                                <RadzenLabel Text="Enumerated" />
+                                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Enumerated
+                                    style="width: 100%;" Name="Enumerated" ReadOnly="true" />
+                            </div>
+                            <div class="col-md-8">
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
-                            <RadzenLabel Text="Downloaded" />
-                            <RadzenNumeric  ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Downloaded style="width: 100%;" Name="Downloaded" ReadOnly="true"/>
-                        </div>
-                        <div class="col-md-8">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
-                            <RadzenLabel Text="Downloading" />
-                            <RadzenNumeric  ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Downloading style="width: 100%;" Name="Downloading" ReadOnly="true"/>
-                        </div>
-                        <div class="col-md-8">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
-                            <RadzenLabel Text="Enumerated" />
-                            <RadzenNumeric  ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Enumerated style="width: 100%;" Name="Enumerated" ReadOnly="true"/>
-                        </div>
-                        <div class="col-md-8">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
-                            <RadzenLabel Text="Formatted" />
-                            <RadzenNumeric  ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Formatted style="width: 100%;" Name="Formatted" ReadOnly="true"/>
-                        </div>
-                        <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-4 align-items-center d-flex">
+                                <RadzenLabel Text="Formatted" />
+                                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Formatted
+                                    style="width: 100%;" Name="Formatted" ReadOnly="true" />
+                            </div>
+                            <div class="col-md-8">
+                            </div>
                         </div>
                     </div>
                 </RadzenColumn>
@@ -173,7 +186,8 @@ else
                     <div class="row">
                         <div class="col-md-4 align-items-center d-flex">
                             <RadzenLabel Text="Formatting" />
-                            <RadzenNumeric  ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Formatting style="width: 100%;" Name="Formatting" ReadOnly="true"/>
+                            <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Formatting
+                                style="width: 100%;" Name="Formatting" ReadOnly="true" />
                         </div>
                         <div class="col-md-8">
                         </div>
@@ -181,67 +195,74 @@ else
                     <div class="row">
                         <div class="col-md-4 align-items-center d-flex">
                             <RadzenLabel Text="Matched" />
-                            <RadzenNumeric  ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Matched style="width: 100%;" Name="Matched" ReadOnly="true"/>
+                            <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Matched
+                                style="width: 100%;" Name="Matched" ReadOnly="true" />
                         </div>
                         <div class="col-md-8">
                         </div>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
-                            <RadzenLabel Text="Queued" />
-                            <RadzenNumeric  ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Queued style="width: 100%;" Name="Queued" ReadOnly="true"/>
+                    @* </div> *@
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-4 align-items-center d-flex">
+                                <RadzenLabel Text="Queued" />
+                                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Queued
+                                    style="width: 100%;" Name="Queued" ReadOnly="true" />
+                            </div>
+                            <div class="col-md-8">
+                            </div>
                         </div>
-                        <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-4 align-items-center d-flex">
+                                <RadzenLabel Text="Records" />
+                                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Records
+                                    style="width: 100%;" Name="Records" ReadOnly="true" />
+                            </div>
+                            <div class="col-md-8">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 align-items-center d-flex">
+                                <RadzenLabel Text="Skipped" />
+                                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Skipped
+                                    style="width: 100%;" Name="Skipped" ReadOnly="true" />
+                            </div>
+                            <div class="col-md-8">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 align-items-center d-flex">
+                                <RadzenLabel Text="Succeeded" />
+                                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Succeeded
+                                    style="width: 100%;" Name="Succeeded" ReadOnly="true" />
+                            </div>
+                            <div class="col-md-8">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 align-items-center d-flex">
+                                <RadzenLabel Text="Unknown" />
+                                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Unknown
+                                    style="width: 100%;" Name="Unknown" ReadOnly="true" />
+                            </div>
+                            <div class="col-md-8">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 align-items-center d-flex">
+                                <RadzenLabel Text="Uploading" />
+                                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Uploading
+                                    style="width: 100%;" Name="Uploading" ReadOnly="true" />
+                            </div>
+                            <div class="col-md-8">
+                            </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
-                            <RadzenLabel Text="Records" />
-                            <RadzenNumeric  ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Records style="width: 100%;" Name="Records" ReadOnly="true"/>
-                        </div>
-                        <div class="col-md-8">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
-                            <RadzenLabel Text="Skipped" />
-                            <RadzenNumeric  ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Skipped style="width: 100%;" Name="Skipped" ReadOnly="true"/>
-                        </div>
-                        <div class="col-md-8">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
-                            <RadzenLabel Text="Succeeded" />
-                            <RadzenNumeric  ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Succeeded style="width: 100%;" Name="Succeeded" ReadOnly="true"/>
-                        </div>
-                        <div class="col-md-8">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
-                            <RadzenLabel Text="Unknown" />
-                            <RadzenNumeric  ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Unknown style="width: 100%;" Name="Unknown" ReadOnly="true"/>
-                        </div>
-                        <div class="col-md-8">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 align-items-center d-flex">
-                            <RadzenLabel Text="Uploading" />
-                            <RadzenNumeric  ShowUpDown="false" TValue="int" @bind-Value:get=@_total.Uploading style="width: 100%;" Name="Uploading" ReadOnly="true"/>
-                        </div>
-                        <div class="col-md-8">
-                        </div>
-                    </div>
-                </div>
                 </RadzenColumn>
             </div>
-        @* </div> *@
-    </RadzenFieldset>
-</RadzenTemplateForm>
+            @* </div> *@
+        </RadzenFieldset>
+    </RadzenTemplateForm>
     <RadzenFieldset Text="Collector Logs">
         @* todo *@
         <LogConsole @ref=@_logConsole />
@@ -253,7 +274,7 @@ else
 @code {
     List<string> GatherTypes;
     Total _total = new Total();
-    ConfigurationProperties _config { get; set; }
+    ConfigurationProperties _config { get; set; } = new ConfigurationProperties();
     ConfigurationProperties _tempConfig { get; set; }
     EventConsole _console;
     LogConsole _logConsole;
@@ -270,13 +291,14 @@ else
 #endif
 
         GatherTypes = Enum.GetNames(typeof(CollectSFData.DataFile.FileTypesEnum)).ToList();
+#if !RADZEN
         await GetCurrentConfig();
 
         if (string.IsNullOrEmpty(_config.SaveConfiguration))
         {
             _config.SaveConfiguration = _defaultConfigurationFile;
         }
-
+#endif
         _logConsole = new LogConsole();
         _console = new EventConsole();
         //_instance = Instance.Clone();
@@ -387,9 +409,9 @@ else
     //public string DiscoveredMaxDateTime { get=>(new DateTime(_instance.DiscoveredMaxDateTicks)).ToString();}
     //public string TimedOut { get=>_instance.TimedOut.ToString();}
 
-    public string DiscoveredMinDateTime { get=> (new DateTime(DateTime.MinValue.Ticks)).ToString(); set=> _ = value;}
-    public string DiscoveredMaxDateTime { get=>(new DateTime(DateTime.MaxValue.Ticks)).ToString();set=> _ = value;}
-    public string TimedOut { get=>false.ToString();set=> _ = value;}
+    public string DiscoveredMinDateTime { get => (new DateTime(DateTime.MinValue.Ticks)).ToString(); set => _ = value; }
+    public string DiscoveredMaxDateTime { get => (new DateTime(DateTime.MaxValue.Ticks)).ToString(); set => _ = value; }
+    public string TimedOut { get => false.ToString(); set => _ = value; }
 
     public string TicksToDateTime(long ticks)
     {

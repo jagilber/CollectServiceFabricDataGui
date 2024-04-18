@@ -531,7 +531,7 @@ else
 
 @code {
     List<string> GatherTypes;
-    ConfigurationProperties _config { get; set; }
+    ConfigurationProperties _config { get; set; } = new ConfigurationProperties();
     ConfigurationProperties _tempConfig { get; set; }
     EventConsole _console;
     List<string> _queuedConsoleMessages = new List<string>();
@@ -547,12 +547,14 @@ else
 #endif
 
         GatherTypes = Enum.GetNames(typeof(CollectSFData.DataFile.FileTypesEnum)).ToList();
+#if !RADZEN
         await GetCurrentConfig();
 
         if (string.IsNullOrEmpty(_config.SaveConfiguration))
         {
             _config.SaveConfiguration = _defaultConfigurationFile;
         }
+#endif
     }
 
     void Cancel()
